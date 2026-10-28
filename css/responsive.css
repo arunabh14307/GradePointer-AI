@@ -1,0 +1,215 @@
+/* ==========================================================================
+   GradePilot AI - Responsive Stylesheet
+   Breakpoints: Desktop, Tablet (<= 1024px), Mobile (<= 768px), Small (<= 480px)
+   ========================================================================== */
+
+/* --- Tablet / Compact Laptops (<= 1024px) --- */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 240px;
+  }
+
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-sidebar-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .content-area {
+    padding: 1.5rem;
+  }
+}
+
+/* --- Tablets & Mobile Phones (<= 768px) --- */
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: inline-flex;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Backdrop for mobile drawer */
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 95;
+  }
+
+  .sidebar-backdrop.active {
+    display: block;
+  }
+
+  .main-wrapper {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .app-header {
+    padding: 0 1rem;
+  }
+
+  .content-area {
+    padding: 1rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .section-header-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .section-header-actions .btn {
+    flex: 1;
+  }
+
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .input-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .calc-score-display {
+    font-size: 2.5rem;
+  }
+
+  .calc-metric-pill-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .chat-window {
+    height: 520px;
+  }
+
+  .chat-bubble {
+    max-width: 90%;
+  }
+
+  .app-footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .footer-links {
+    justify-content: center;
+  }
+}
+
+/* --- Extra Small Phones (<= 480px) --- */
+@media (max-width: 480px) {
+  .section-header-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .chat-input-bar {
+    padding: 0.75rem 1rem;
+  }
+
+  .chat-messages {
+    padding: 1rem;
+  }
+
+  .calc-tab-btn {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.15rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .scale-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .calc-nav-pill-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .calc-nav-tab-btn {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.8rem;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .pct-subtabs-nav {
+    padding: 0;
+    gap: 0.75rem;
+  }
+
+  .pct-subtab-btn {
+    font-size: 0.85rem;
+    padding: 0.65rem 0.25rem;
+  }
+}
+
+
+/* --- Print Styles --- */
+@media print {
+  .sidebar,
+  .app-header,
+  .chat-input-bar,
+  .chat-prompt-chips,
+  .section-header-actions,
+  .btn,
+  .theme-toggle-btn,
+  #toast-container,
+  .app-footer {
+    display: none !important;
+  }
+
+  .main-wrapper {
+    margin-left: 0 !important;
+  }
+
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #CCCCCC !important;
+    break-inside: avoid;
+  }
+}
