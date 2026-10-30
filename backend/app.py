@@ -8,7 +8,7 @@ import os
 import json
 import logging
 from typing import Tuple, Any, Dict
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, send_file, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
 
@@ -261,15 +261,44 @@ def execute_gemini_generation(prompt: str, system_instruction: str = None, max_o
     }), last_status_code if last_status_code in (500, 502, 503, 504) else 502)
 
 
+# Base directory of the repository (for serving static frontend files)
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 # ==============================================================================
-# Endpoint 1: Root & Health Check
+# Endpoint 1: Root, Frontend & Health Check
 # ==============================================================================
 @app.route("/", methods=["GET"])
-@app.route("/api", methods=["GET"])
 def index():
     """
-    GET / or /api
-    Returns service information and active endpoints for browser visits.
+    GET /
+    Serves the GradePilot AI frontend application (index.html).
+    Falls back to JSON status if static files are not present.
+    """
+    index_file = os.path.join(ROOT_DIR, "index.html")
+    if os.path.exists(index_file):
+        return send_file(index_file)
+    return jsonify({
+        "status": "online",
+        "service": "GradePilot AI Backend",
+        "version": "1.0.0",
+        "gemini_configured": bool(genai_client is not None),
+        "endpoints": {
+            "health": "/api/health",
+            "chat": "/api/ai/chat",
+            "analyze": "/api/ai/analyze",
+            "advisor": "/api/ai/advisor",
+            "study_plan": "/api/ai/study-plan",
+            "predict": "/api/ai/predict"
+        }
+    }), 200
+
+
+@app.route("/api", methods=["GET"])
+def api_directory():
+    """
+    GET /api
+    Returns API service directory and endpoint links.
     """
     return jsonify({
         "status": "online",
@@ -285,6 +314,21 @@ def index():
             "predict": "/api/ai/predict"
         }
     }), 200
+
+
+@app.route("/css/<path:filename>", methods=["GET"])
+def serve_css(filename):
+    return send_from_directory(os.path.join(ROOT_DIR, "css"), filename)
+
+
+@app.route("/js/<path:filename>", methods=["GET"])
+def serve_js(filename):
+    return send_from_directory(os.path.join(ROOT_DIR, "js"), filename)
+
+
+@app.route("/assets/<path:filename>", methods=["GET"])
+def serve_assets(filename):
+    return send_from_directory(os.path.join(ROOT_DIR, "assets"), filename)
 
 
 @app.route("/api/health", methods=["GET"])
