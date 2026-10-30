@@ -262,8 +262,31 @@ def execute_gemini_generation(prompt: str, system_instruction: str = None, max_o
 
 
 # ==============================================================================
-# Endpoint 1: Health Check
+# Endpoint 1: Root & Health Check
 # ==============================================================================
+@app.route("/", methods=["GET"])
+@app.route("/api", methods=["GET"])
+def index():
+    """
+    GET / or /api
+    Returns service information and active endpoints for browser visits.
+    """
+    return jsonify({
+        "status": "online",
+        "service": "GradePilot AI Backend",
+        "version": "1.0.0",
+        "gemini_configured": bool(genai_client is not None),
+        "endpoints": {
+            "health": "/api/health",
+            "chat": "/api/ai/chat",
+            "analyze": "/api/ai/analyze",
+            "advisor": "/api/ai/advisor",
+            "study_plan": "/api/ai/study-plan",
+            "predict": "/api/ai/predict"
+        }
+    }), 200
+
+
 @app.route("/api/health", methods=["GET"])
 def health():
     """

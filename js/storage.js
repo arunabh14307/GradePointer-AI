@@ -35,7 +35,7 @@ const AppStorage = (() => {
   const DEFAULT_SETTINGS = {
     theme: 'dark',
     gradingScale: '10.0', // '10.0' or '4.0'
-    backendUrl: 'http://localhost:5000',
+    backendUrl: 'https://grade-pointer-ai-backend.vercel.app',
     autoSave: true,
     hapticFeedback: true
   };

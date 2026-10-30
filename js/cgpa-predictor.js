@@ -567,7 +567,7 @@ const CgpaPredictor = (() => {
 
     const calc = lastCalculation;
     const settings = Storage.getSettings ? Storage.getSettings() : {};
-    const backendUrl = (Utils.getBackendUrl ? Utils.getBackendUrl() : settings.backendUrl) || 'http://localhost:5000';
+    const backendUrl = (Utils.getBackendUrl ? Utils.getBackendUrl() : settings.backendUrl) || 'https://grade-pointer-ai-backend.vercel.app';
 
     const aiOutputContainer = document.getElementById('pred-ai-output-container');
     const loadingState = document.getElementById('pred-ai-loading-state');

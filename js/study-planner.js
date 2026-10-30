@@ -372,7 +372,7 @@ const StudyPlanner = (() => {
     }
 
     const settings = Storage.getSettings ? Storage.getSettings() : {};
-    const backendUrl = (Utils.getBackendUrl ? Utils.getBackendUrl() : settings.backendUrl) || 'http://localhost:5000';
+    const backendUrl = (Utils.getBackendUrl ? Utils.getBackendUrl() : settings.backendUrl) || 'https://grade-pointer-ai-backend.vercel.app';
 
     try {
       const response = await fetch(`${backendUrl}/api/ai/study-plan`, {

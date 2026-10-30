@@ -194,7 +194,7 @@ const App = (() => {
    */
   const checkBackendHealth = async () => {
     const settings = AppStorage.getSettings();
-    const backendUrl = (Utils.getBackendUrl ? Utils.getBackendUrl() : settings.backendUrl) || 'http://localhost:5000';
+    const backendUrl = (Utils.getBackendUrl ? Utils.getBackendUrl() : settings.backendUrl) || 'https://grade-pointer-ai-backend.vercel.app';
     const pill = document.getElementById('backend-status-pill');
     const pillText = document.getElementById('backend-status-text');
 
@@ -242,7 +242,7 @@ const App = (() => {
     if (tgtGpaIn) tgtGpaIn.value = profile.targetCgpa || '3.85';
     if (creditsIn) creditsIn.value = profile.completedCredits || '64';
     if (scaleSelect) scaleSelect.value = settings.gradingScale || '4.0';
-    if (backendUrlIn) backendUrlIn.value = settings.backendUrl || 'http://localhost:5000';
+    if (backendUrlIn) backendUrlIn.value = settings.backendUrl || 'https://grade-pointer-ai-backend.vercel.app';
 
     // Profile form submit
     const profileForm = document.getElementById('settings-profile-form');
@@ -294,7 +294,7 @@ const App = (() => {
     const testBackendBtn = document.getElementById('btn-test-backend');
     if (testBackendBtn) {
       testBackendBtn.addEventListener('click', async () => {
-        const url = (backendUrlIn ? backendUrlIn.value.trim() : '') || 'http://localhost:5000';
+        const url = (backendUrlIn ? backendUrlIn.value.trim() : '') || 'https://grade-pointer-ai-backend.vercel.app';
         testBackendBtn.disabled = true;
         testBackendBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Testing...';
         try {
@@ -322,7 +322,7 @@ const App = (() => {
         e.preventDefault();
         AppStorage.saveSettings({
           gradingScale: scaleSelect ? scaleSelect.value : '10.0',
-          backendUrl: backendUrlIn ? backendUrlIn.value.trim() : 'http://localhost:5000'
+          backendUrl: backendUrlIn ? backendUrlIn.value.trim() : 'https://grade-pointer-ai-backend.vercel.app'
         });
 
         // Recalculate calculators with new scale
@@ -341,7 +341,7 @@ const App = (() => {
           AppStorage.resetPreferences();
           applyTheme('dark');
           if (scaleSelect) scaleSelect.value = '10.0';
-          if (backendUrlIn) backendUrlIn.value = 'http://localhost:5000';
+          if (backendUrlIn) backendUrlIn.value = 'https://grade-pointer-ai-backend.vercel.app';
           checkBackendHealth();
           Utils.showToast('Preferences reset to default values.', 'info');
         }

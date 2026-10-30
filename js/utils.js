@@ -475,10 +475,10 @@ const Utils = (() => {
   const getBackendUrl = () => {
     try {
       const settings = (window.AppStorage && AppStorage.getSettings) ? AppStorage.getSettings() : {};
-      let url = (settings.backendUrl || 'http://localhost:5000').trim();
+      let url = (settings.backendUrl || 'https://grade-pointer-ai-backend.vercel.app').trim();
       return url.replace(/\/+$/, '');
     } catch (e) {
-      return 'http://localhost:5000';
+      return 'https://grade-pointer-ai-backend.vercel.app';
     }
   };
 
