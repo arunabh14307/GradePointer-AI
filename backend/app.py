@@ -7,8 +7,9 @@ CORS security, and structured academic endpoints.
 import os
 import json
 import logging
+import mimetypes
 from typing import Tuple, Any, Dict
-from flask import Flask, request, jsonify, make_response, send_file, send_from_directory
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from dotenv import load_dotenv
 
@@ -265,6 +266,37 @@ def execute_gemini_generation(prompt: str, system_instruction: str = None, max_o
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def _serve_file(file_path: str):
+    """
+    Safely reads and returns a static file with correct MIME type,
+    ensuring file descriptors are closed immediately in serverless environments.
+    """
+    if not os.path.isfile(file_path):
+        return jsonify({"error": "Not Found", "message": "The requested resource does not exist."}), 404
+
+    mime_type, _ = mimetypes.guess_type(file_path)
+    if file_path.endswith(".js"):
+        mime_type = "application/javascript"
+    elif file_path.endswith(".css"):
+        mime_type = "text/css"
+    elif file_path.endswith(".html"):
+        mime_type = "text/html; charset=utf-8"
+    elif file_path.endswith(".svg"):
+        mime_type = "image/svg+xml"
+
+    try:
+        with open(file_path, "rb") as f:
+            data = f.read()
+    except Exception as e:
+        logger.error(f"Error reading file {file_path}: {e}")
+        return jsonify({"error": "Read Error", "message": "Failed to read requested file."}), 500
+
+    resp = make_response(data)
+    if mime_type:
+        resp.headers["Content-Type"] = mime_type
+    return resp
+
+
 # ==============================================================================
 # Endpoint 1: Root, Frontend & Health Check
 # ==============================================================================
@@ -277,7 +309,7 @@ def index():
     """
     index_file = os.path.join(ROOT_DIR, "index.html")
     if os.path.exists(index_file):
-        return send_file(index_file)
+        return _serve_file(index_file)
     return jsonify({
         "status": "online",
         "service": "GradePilot AI Backend",
@@ -318,17 +350,17 @@ def api_directory():
 
 @app.route("/css/<path:filename>", methods=["GET"])
 def serve_css(filename):
-    return send_from_directory(os.path.join(ROOT_DIR, "css"), filename)
+    return _serve_file(os.path.join(ROOT_DIR, "css", filename))
 
 
 @app.route("/js/<path:filename>", methods=["GET"])
 def serve_js(filename):
-    return send_from_directory(os.path.join(ROOT_DIR, "js"), filename)
+    return _serve_file(os.path.join(ROOT_DIR, "js", filename))
 
 
 @app.route("/assets/<path:filename>", methods=["GET"])
 def serve_assets(filename):
-    return send_from_directory(os.path.join(ROOT_DIR, "assets"), filename)
+    return _serve_file(os.path.join(ROOT_DIR, "assets", filename))
 
 
 @app.route("/api/health", methods=["GET"])
