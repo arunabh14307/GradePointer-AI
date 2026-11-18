@@ -6,6 +6,7 @@
 
 const App = (() => {
   const SECTIONS = [
+    'home',
     'dashboard',
     'grade-calculator',
     'cgpa-calculator',
@@ -18,6 +19,7 @@ const App = (() => {
   ];
 
   const SECTION_TITLES = {
+    'home': 'Home — AI Academic Platform',
     'dashboard': 'Academic Dashboard',
     'grade-calculator': 'Grade Calculator',
     'cgpa-calculator': 'CGPA & SGPA Calculator',
@@ -28,6 +30,8 @@ const App = (() => {
     'ai-chat': 'AI Chat Assistant',
     'settings': 'Settings & Student Profile'
   };
+
+  let heroPreviewChartInstance = null;
 
   const init = () => {
     applyTheme();
@@ -47,8 +51,13 @@ const App = (() => {
     StudyPlanner.init();
     AiChat.init();
 
-    // Route to initial section from hash or default to dashboard
-    const initialHash = window.location.hash.replace('#', '') || 'dashboard';
+    // Initialize Astra AI Interactive Showcase Features
+    initHeroPreviewChart();
+    initQuickHomeEstimator();
+    setupScrollReveal();
+
+    // Route to initial section from hash or default to home
+    const initialHash = window.location.hash.replace('#', '') || 'home';
     navigateTo(initialHash, false);
 
     // Periodically re-check backend health every 60s
@@ -78,6 +87,9 @@ const App = (() => {
     // Refresh charts for correct color palette
     if (Dashboard && Dashboard.initGpaChart) {
       Dashboard.initGpaChart();
+    }
+    if (heroPreviewChartInstance || document.getElementById('hero-preview-chart')) {
+      initHeroPreviewChart();
     }
   };
 
@@ -435,6 +447,149 @@ const App = (() => {
         }
       });
     }
+  };
+
+  /**
+   * Render Astra AI Animated Hero Dashboard Preview Chart
+   */
+  const initHeroPreviewChart = () => {
+    const canvas = document.getElementById('hero-preview-chart');
+    if (!canvas || !window.Chart) return;
+
+    if (heroPreviewChartInstance) {
+      heroPreviewChartInstance.destroy();
+      heroPreviewChartInstance = null;
+    }
+
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 140);
+    gradient.addColorStop(0, isDark ? 'rgba(124, 58, 237, 0.45)' : 'rgba(124, 58, 237, 0.22)');
+    gradient.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
+
+    heroPreviewChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Projected'],
+        datasets: [{
+          label: 'Academic Trajectory',
+          data: [3.65, 3.72, 3.80, 3.84, 3.92],
+          borderColor: '#8B5CF6',
+          borderWidth: 3,
+          backgroundColor: gradient,
+          fill: true,
+          tension: 0.38,
+          pointBackgroundColor: '#06B6D4',
+          pointBorderColor: '#FFFFFF',
+          pointBorderWidth: 2,
+          pointRadius: 4.5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: isDark ? '#0C1024' : '#FFFFFF',
+            titleColor: isDark ? '#F8FAFC' : '#0F172A',
+            bodyColor: '#38BDF8',
+            borderColor: isDark ? 'rgba(139, 92, 246, 0.4)' : '#E2E8F0',
+            borderWidth: 1,
+            padding: 8,
+            displayColors: false,
+            callbacks: {
+              label: (context) => `CGPA: ${context.parsed.y.toFixed(2)}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: isDark ? '#94A3B8' : '#64748B', font: { size: 10, weight: 600 } }
+          },
+          y: {
+            min: 3.4,
+            max: 4.0,
+            grid: { color: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)' },
+            ticks: { color: isDark ? '#94A3B8' : '#64748B', font: { size: 10 }, stepSize: 0.2 }
+          }
+        }
+      }
+    });
+  };
+
+  /**
+   * Home Interactive Quick CGPA Estimator Widget
+   */
+  const initQuickHomeEstimator = () => {
+    const curIn = document.getElementById('home-qc-current');
+    const tgtIn = document.getElementById('home-qc-target');
+    const credIn = document.getElementById('home-qc-credits');
+    const compIn = document.getElementById('home-qc-completed');
+    const btn = document.getElementById('home-qc-calc-btn');
+    const resBox = document.getElementById('home-qc-result-box');
+    const valSpan = document.getElementById('home-qc-val');
+    const tagSpan = document.getElementById('home-qc-tag');
+    const noteSpan = document.getElementById('home-qc-note');
+
+    if (!btn || !curIn || !tgtIn) return;
+
+    btn.addEventListener('click', () => {
+      const cur = parseFloat(curIn.value);
+      const tgt = parseFloat(tgtIn.value);
+      const comp = parseFloat(compIn ? compIn.value : 60) || 60;
+      const cred = parseFloat(credIn ? credIn.value : 20) || 20;
+
+      if (isNaN(cur) || isNaN(tgt) || cur < 0 || tgt < 0) {
+        Utils.showToast('Please enter valid current and target CGPA values.', 'warning');
+        return;
+      }
+
+      // Formula: Required SGPA = (Target * (Completed + Upcoming) - (Current * Completed)) / Upcoming
+      const req = (tgt * (comp + cred) - (cur * comp)) / cred;
+      const formatted = req.toFixed(2);
+
+      if (resBox && valSpan) {
+        resBox.style.display = 'block';
+        valSpan.textContent = formatted;
+
+        if (req > 10.0 || (cur <= 4.0 && req > 4.0)) {
+          tagSpan.className = 'badge badge-danger';
+          tagSpan.textContent = 'Statistically Impossible in 1 Term';
+          noteSpan.textContent = 'This target requires higher credits than mathematically possible. Consider aiming for this over multiple semesters.';
+        } else if ((req > 3.85 && cur <= 4.0) || req > 9.2) {
+          tagSpan.className = 'badge badge-warning';
+          tagSpan.textContent = 'High Demand Target';
+          noteSpan.textContent = 'Requires an almost perfect term (mostly A/A+ grades). Focus heavily on high-credit courses.';
+        } else {
+          tagSpan.className = 'badge badge-success';
+          tagSpan.textContent = 'Achievable Goal';
+          noteSpan.textContent = 'A solid, realistic semester trajectory. Consistent study routines will secure this score!';
+        }
+      }
+    });
+  };
+
+  /**
+   * Scroll Reveal Animation Observer
+   */
+  const setupScrollReveal = () => {
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('is-revealed'));
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
   };
 
   return {

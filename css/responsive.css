@@ -183,6 +183,74 @@
   }
 }
 
+/* --- Astra AI Responsive Enhancements --- */
+@media (min-width: 961px) {
+  .mobile-menu-btn {
+    display: none !important;
+  }
+  .sidebar {
+    display: none !important;
+  }
+  .main-wrapper {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 960px) {
+  .astra-nav-links {
+    display: none !important;
+  }
+  .mobile-menu-btn {
+    display: inline-flex !important;
+  }
+  .astra-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .hero-preview-col {
+    order: 2;
+  }
+  .hero-content-col {
+    order: 1;
+    text-align: center;
+    align-items: center;
+  }
+  .hero-lead-text {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-cta-group {
+    justify-content: center;
+  }
+  .hero-trust-bar {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .astra-nav-container {
+    padding: 0.75rem 1rem;
+  }
+  .btn-astra-cta span {
+    display: none;
+  }
+  .btn-astra-cta {
+    padding: 0.5rem 0.75rem;
+  }
+  .hero-headline {
+    font-size: 2.15rem;
+  }
+  .preview-metrics-row {
+    grid-template-columns: 1fr;
+  }
+  .astra-hero-section {
+    padding: 2.5rem 1rem 3.5rem;
+  }
+  .home-quick-calc-wrapper {
+    padding: 1.5rem 1rem;
+  }
+}
 
 /* --- Print Styles --- */
 @media print {
