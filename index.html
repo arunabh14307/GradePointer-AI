@@ -1351,21 +1351,43 @@
 
               <!-- Input Bar -->
               <div class="chat-input-wrapper">
+                <div id="chat-voice-status" class="chat-voice-status" role="status" aria-live="polite" style="display: none;">
+                  <div class="chat-voice-status-text">
+                    <i id="chat-voice-status-icon" class="fa-solid fa-microphone-lines" aria-hidden="true"></i>
+                    <span id="chat-voice-status-msg">Listening…</span>
+                  </div>
+                  <button type="button" id="chat-voice-cancel-btn" class="btn btn-ghost btn-sm chat-voice-cancel-btn" aria-label="Cancel voice input">
+                    Cancel
+                  </button>
+                </div>
                 <div class="chat-input-controls">
                   <textarea
                     id="chat-input-field"
                     class="chat-textarea"
                     aria-label="Ask GradePilot a question"
-                    placeholder="Type your question…"
+                    placeholder="Type your question or tap Speak…"
                     rows="1"
                     maxlength="2000"
                   ></textarea>
                   <div class="chat-input-actions">
-                    <span id="chat-char-counter" class="chat-counter">0 / 2000</span>
-                    <button id="chat-send-btn" class="btn btn-primary chat-submit-btn" aria-label="Send message">
-                      <i class="fa-solid fa-paper-plane"></i>
-                      <span>Send</span>
-                    </button>
+                    <div class="chat-input-meta">
+                      <span id="chat-char-counter" class="chat-counter">0 / 2000</span>
+                      <select id="chat-voice-lang" class="chat-voice-lang-select" aria-label="Voice recognition language" title="Voice recognition language">
+                        <option value="en-IN">Voice: English / Hinglish (IN)</option>
+                        <option value="en-US">Voice: English (US)</option>
+                        <option value="hi-IN">Voice: Hindi / Hinglish (HI)</option>
+                      </select>
+                    </div>
+                    <div class="chat-action-buttons">
+                      <button type="button" id="chat-mic-btn" class="btn btn-secondary chat-mic-btn" aria-label="Speak to search" aria-pressed="false" title="Speak to search">
+                        <i class="fa-solid fa-microphone" aria-hidden="true"></i>
+                        <span class="chat-mic-label">Speak</span>
+                      </button>
+                      <button type="button" id="chat-send-btn" class="btn btn-primary chat-submit-btn" aria-label="Send message">
+                        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+                        <span>Send</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -22,11 +22,19 @@ const AiChat = (() => {
   // Cache last failed message for the retry button
   let lastFailedAttempt = null;
 
+  // Voice recognition state (Web Speech API)
+  const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  let recognition = null;
+  let isListening = false;
+  let voiceBaseText = '';
+  let voiceCancelled = false;
+
   /**
    * Initialize module
    */
   const init = () => {
     renderHistory();
+    initVoiceInput();
     bindEvents();
     updateCharCounter();
   };
@@ -536,12 +544,244 @@ const AiChat = (() => {
   };
 
   /**
+   * Initialize browser SpeechRecognition UI and language preference
+   */
+  const initVoiceInput = () => {
+    const micBtn = document.getElementById('chat-mic-btn');
+    const langSelect = document.getElementById('chat-voice-lang');
+    const statusBox = document.getElementById('chat-voice-status');
+
+    if (langSelect) {
+      const savedLang = localStorage.getItem('gradepilot_voice_lang');
+      if (savedLang && [...langSelect.options].some(opt => opt.value === savedLang)) {
+        langSelect.value = savedLang;
+      }
+      langSelect.addEventListener('change', () => {
+        localStorage.setItem('gradepilot_voice_lang', langSelect.value);
+      });
+    }
+
+    if (!SpeechRecognitionAPI) {
+      if (micBtn) {
+        micBtn.disabled = true;
+        micBtn.title = "Voice input isn't supported in this browser";
+        micBtn.setAttribute('aria-label', "Voice input isn't supported in this browser");
+      }
+      if (langSelect) {
+        langSelect.disabled = true;
+      }
+      if (statusBox) {
+        showVoiceStatus("Voice input isn't supported in this browser.", true, false);
+      }
+    }
+  };
+
+  /**
+   * Show or hide the inline voice status banner
+   */
+  const showVoiceStatus = (message, isError = false, showCancel = true) => {
+    const statusBox = document.getElementById('chat-voice-status');
+    const statusMsg = document.getElementById('chat-voice-status-msg');
+    const statusIcon = document.getElementById('chat-voice-status-icon');
+    const cancelBtn = document.getElementById('chat-voice-cancel-btn');
+    if (!statusBox || !statusMsg) return;
+
+    statusBox.classList.toggle('is-error', Boolean(isError));
+    statusBox.classList.toggle('is-listening', !isError);
+    statusMsg.textContent = message;
+    if (statusIcon) {
+      statusIcon.className = isError
+        ? 'fa-solid fa-triangle-exclamation'
+        : 'fa-solid fa-microphone-lines';
+    }
+    if (cancelBtn) {
+      cancelBtn.style.display = showCancel ? 'inline-flex' : 'none';
+      cancelBtn.textContent = isError ? 'Dismiss' : 'Cancel';
+    }
+    statusBox.style.display = 'flex';
+  };
+
+  const hideVoiceStatus = () => {
+    const statusBox = document.getElementById('chat-voice-status');
+    if (statusBox) {
+      statusBox.style.display = 'none';
+      statusBox.classList.remove('is-error', 'is-listening');
+    }
+  };
+
+  const updateMicButtonState = (listening) => {
+    const micBtn = document.getElementById('chat-mic-btn');
+    if (!micBtn) return;
+
+    micBtn.classList.toggle('is-listening', listening);
+    micBtn.setAttribute('aria-pressed', String(listening));
+    micBtn.setAttribute('aria-label', listening ? 'Stop listening' : 'Speak to search');
+    micBtn.title = listening ? 'Stop listening' : 'Speak to search';
+
+    const labelEl = micBtn.querySelector('.chat-mic-label');
+    const iconEl = micBtn.querySelector('i');
+    if (labelEl) {
+      labelEl.textContent = listening ? 'Stop' : 'Speak';
+    }
+    if (iconEl) {
+      iconEl.className = listening ? 'fa-solid fa-stop' : 'fa-solid fa-microphone';
+    }
+  };
+
+  /**
+   * Start or stop speech recognition on explicit user click
+   */
+  const toggleVoiceInput = () => {
+    if (!SpeechRecognitionAPI) {
+      showVoiceStatus("Voice input isn't supported in this browser.", true, true);
+      return;
+    }
+
+    if (isListening && recognition) {
+      voiceCancelled = false;
+      recognition.stop();
+      return;
+    }
+
+    const inputField = document.getElementById('chat-input-field');
+    const langSelect = document.getElementById('chat-voice-lang');
+    voiceBaseText = inputField ? inputField.value.trim() : '';
+    voiceCancelled = false;
+
+    try {
+      recognition = new SpeechRecognitionAPI();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+      recognition.lang = (langSelect && langSelect.value) ? langSelect.value : 'en-IN';
+    } catch (err) {
+      showVoiceStatus("Voice input couldn't be started in this browser.", true, true);
+      return;
+    }
+
+    let hadError = false;
+    let finalTranscript = '';
+
+    recognition.onstart = () => {
+      isListening = true;
+      updateMicButtonState(true);
+      showVoiceStatus('Listening… Speak your question', false, true);
+    };
+
+    recognition.onresult = (event) => {
+      if (voiceCancelled || !inputField) return;
+      let interimTranscript = '';
+      finalTranscript = '';
+
+      for (let i = 0; i < event.results.length; i++) {
+        const transcript = event.results[i][0] ? event.results[i][0].transcript : '';
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+
+      const spoken = `${finalTranscript}${interimTranscript}`.trim();
+      const combined = voiceBaseText
+        ? (spoken ? `${voiceBaseText} ${spoken}` : voiceBaseText)
+        : spoken;
+
+      inputField.value = combined.slice(0, 2000);
+      updateCharCounter();
+      inputField.style.height = 'auto';
+      inputField.style.height = `${Math.min(inputField.scrollHeight, 120)}px`;
+    };
+
+    recognition.onerror = (event) => {
+      hadError = true;
+      const errCode = event && event.error ? event.error : 'unknown';
+
+      if (voiceCancelled && errCode === 'aborted') {
+        return;
+      }
+
+      let message = 'Voice recognition ran into an error. Please try again.';
+      if (errCode === 'not-allowed' || errCode === 'service-not-allowed') {
+        message = 'Microphone permission was denied. Allow mic access in your browser settings and try again.';
+      } else if (errCode === 'no-speech') {
+        message = 'No speech detected. Tap Speak and try again.';
+      } else if (errCode === 'audio-capture') {
+        message = 'No microphone was found. Check your audio input device and try again.';
+      } else if (errCode === 'network') {
+        message = 'Voice recognition needs an active connection in this browser.';
+      } else if (errCode === 'aborted') {
+        message = 'Voice input was stopped.';
+      }
+
+      showVoiceStatus(message, true, true);
+      Utils.showToast(message, 'warning');
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      updateMicButtonState(false);
+
+      if (voiceCancelled) {
+        if (inputField) {
+          inputField.value = voiceBaseText;
+          updateCharCounter();
+          inputField.style.height = 'auto';
+          inputField.style.height = `${Math.min(inputField.scrollHeight, 120)}px`;
+        }
+        hideVoiceStatus();
+        return;
+      }
+
+      if (!hadError) {
+        hideVoiceStatus();
+        if (inputField && inputField.value.trim()) {
+          inputField.focus();
+        }
+      }
+    };
+
+    try {
+      recognition.start();
+    } catch (err) {
+      isListening = false;
+      updateMicButtonState(false);
+      showVoiceStatus('Unable to start microphone listening. Please try again.', true, true);
+    }
+  };
+
+  const cancelVoiceInput = () => {
+    if (isListening && recognition) {
+      voiceCancelled = true;
+      recognition.abort();
+      return;
+    }
+    hideVoiceStatus();
+  };
+
+  /**
    * Bind DOM event listeners
    */
   const bindEvents = () => {
     const sendBtn = document.getElementById('chat-send-btn');
+    const micBtn = document.getElementById('chat-mic-btn');
+    const cancelVoiceBtn = document.getElementById('chat-voice-cancel-btn');
     const inputField = document.getElementById('chat-input-field');
     const clearBtn = document.getElementById('chat-clear-btn');
+
+    // Voice input mic & cancel buttons
+    if (micBtn) {
+      micBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleVoiceInput();
+      });
+    }
+    if (cancelVoiceBtn) {
+      cancelVoiceBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        cancelVoiceInput();
+      });
+    }
 
     // Send button click
     if (sendBtn) {

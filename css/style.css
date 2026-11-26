@@ -2760,6 +2760,95 @@ select.form-control {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.chat-input-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.chat-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.chat-voice-lang-select {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-family: inherit;
+  min-height: 30px;
+  cursor: pointer;
+}
+
+.chat-voice-lang-select:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.chat-mic-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.chat-mic-btn:focus-visible,
+.chat-submit-btn:focus-visible,
+.chat-voice-cancel-btn:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.chat-mic-btn.is-listening {
+  background: var(--danger-light);
+  border-color: var(--danger);
+  color: var(--danger);
+  animation: micPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.28); }
+  50% { box-shadow: 0 0 0 5px rgba(239, 68, 68, 0); }
+}
+
+.chat-voice-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.85rem;
+  margin-bottom: 0.65rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid var(--border-accent);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.chat-voice-status.is-error {
+  border-color: var(--danger);
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+.chat-voice-status-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .chat-counter {
@@ -2809,6 +2898,17 @@ select.form-control {
   }
   .chat-input-wrapper {
     padding: 0.75rem 1rem;
+  }
+  .chat-input-actions {
+    gap: 0.5rem;
+  }
+  .chat-action-buttons {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .chat-mic-btn,
+  .chat-submit-btn {
+    min-height: 44px;
   }
 }
 
