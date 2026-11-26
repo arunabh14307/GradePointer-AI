@@ -264,7 +264,8 @@ button, input, select, textarea {
   font-weight: 800;
   letter-spacing: -0.02em;
   background: var(--grad-pilot);
-  webkit-background-clip: text;
+  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: flex;
   align-items: center;
@@ -1055,6 +1056,7 @@ select.form-control {
   line-height: 1.1;
   background: var(--grad-pilot);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 0.5rem 0;
 }
@@ -3040,6 +3042,7 @@ select.form-control {
 .text-gradient-astra {
   background: linear-gradient(135deg, #FFFFFF 20%, #C084FC 60%, #38BDF8 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
@@ -3047,6 +3050,7 @@ select.form-control {
 .text-gradient-purple {
   background: linear-gradient(135deg, #A855F7 0%, #C084FC 50%, #06B6D4 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
@@ -3054,6 +3058,7 @@ select.form-control {
 .text-gradient-cyan {
   background: linear-gradient(135deg, #38BDF8 0%, #06B6D4 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
@@ -3873,6 +3878,7 @@ select.form-control {
   line-height: 1.1;
   background: linear-gradient(135deg, #FFFFFF, #C084FC);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.35rem;
 }
@@ -3880,6 +3886,7 @@ select.form-control {
 [data-theme="light"] .stat-number-giant {
   background: linear-gradient(135deg, #7C3AED, #0284C7);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
