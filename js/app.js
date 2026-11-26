@@ -19,19 +19,17 @@ const App = (() => {
   ];
 
   const SECTION_TITLES = {
-    'home': 'Home — AI Academic Platform',
-    'dashboard': 'Academic Dashboard',
+    'home': 'Home',
+    'dashboard': 'Dashboard',
     'grade-calculator': 'Grade Calculator',
-    'cgpa-calculator': 'CGPA & SGPA Calculator',
-    'percentage-calculator': 'Percentage & Attendance Converter',
-    'ai-advisor': 'AI Academic Advisor',
-    'cgpa-predictor': 'AI CGPA Predictor',
-    'study-planner': 'AI Study Planner',
+    'cgpa-calculator': 'CGPA Calculator',
+    'percentage-calculator': 'Percentage',
+    'ai-advisor': 'AI Advisor',
+    'cgpa-predictor': 'CGPA Predictor',
+    'study-planner': 'Study Planner',
     'ai-chat': 'Ask GradePilot',
-    'settings': 'Settings & Student Profile'
+    'settings': 'Settings'
   };
-
-  let heroPreviewChartInstance = null;
 
   const init = () => {
     applyTheme();
@@ -51,10 +49,9 @@ const App = (() => {
     StudyPlanner.init();
     AiChat.init();
 
-    // Initialize Astra AI Interactive Showcase Features
-    initHeroPreviewChart();
-    initQuickHomeEstimator();
+    // Initialize scroll reveal and restrained homepage card tilt
     setupScrollReveal();
+    setupCardTilt();
 
     // Route to initial section from hash or default to home
     const initialHash = window.location.hash.replace('#', '') || 'home';
@@ -67,29 +64,61 @@ const App = (() => {
   /**
    * Theme Manager (Dark / Light)
    */
-  const applyTheme = (themeName = null) => {
+  const getPreferredTheme = () => {
     const savedLocal = localStorage.getItem('theme');
-    const settings = AppStorage.getSettings();
-    const currentTheme = themeName || savedLocal || settings.theme || 'dark';
+    if (savedLocal === 'light' || savedLocal === 'dark') return savedLocal;
+
+    const settings = AppStorage.getSettings ? AppStorage.getSettings() : {};
+    if (settings.theme === 'light' || settings.theme === 'dark') return settings.theme;
+
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      return 'light';
+    }
+    return 'dark';
+  };
+
+  const applyTheme = (themeName = null) => {
+    const currentTheme = (themeName === 'light' || themeName === 'dark') ? themeName : getPreferredTheme();
 
     document.documentElement.setAttribute('data-theme', currentTheme);
     localStorage.setItem('theme', currentTheme);
 
+    const toggleBtn = document.getElementById('theme-toggle-btn');
     const toggleIcon = document.getElementById('theme-toggle-icon');
+    const toggleLabel = document.getElementById('theme-toggle-label');
+    const isDark = currentTheme === 'dark';
+
     if (toggleIcon) {
-      if (currentTheme === 'light') {
-        toggleIcon.className = 'fa-solid fa-moon';
-      } else {
-        toggleIcon.className = 'fa-solid fa-sun';
-      }
+      toggleIcon.className = isDark ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+    }
+    if (toggleLabel) {
+      toggleLabel.textContent = isDark ? 'Dark' : 'Light';
+    }
+    if (toggleBtn) {
+      toggleBtn.setAttribute('aria-pressed', String(isDark));
+      toggleBtn.setAttribute(
+        'aria-label',
+        isDark ? 'Dark mode active, switch to light mode' : 'Light mode active, switch to dark mode'
+      );
+      toggleBtn.title = isDark
+        ? 'Dark mode active — switch to Light mode'
+        : 'Light mode active — switch to Dark mode';
+    }
+
+    const darkBtn = document.getElementById('btn-theme-dark');
+    const lightBtn = document.getElementById('btn-theme-light');
+    if (darkBtn) {
+      darkBtn.classList.toggle('active', isDark);
+      darkBtn.setAttribute('aria-pressed', String(isDark));
+    }
+    if (lightBtn) {
+      lightBtn.classList.toggle('active', !isDark);
+      lightBtn.setAttribute('aria-pressed', String(!isDark));
     }
 
     // Refresh charts for correct color palette
     if (Dashboard && Dashboard.initGpaChart) {
       Dashboard.initGpaChart();
-    }
-    if (heroPreviewChartInstance || document.getElementById('hero-preview-chart')) {
-      initHeroPreviewChart();
     }
   };
 
@@ -121,13 +150,13 @@ const App = (() => {
 
     // Listen for browser back/forward buttons
     window.addEventListener('hashchange', () => {
-      const hash = window.location.hash.replace('#', '') || 'grade-calculator';
+      const hash = window.location.hash.replace('#', '') || 'home';
       navigateTo(hash, false);
     });
   };
 
   const navigateTo = (sectionId, updateHash = true) => {
-    const validSection = SECTIONS.includes(sectionId) ? sectionId : 'grade-calculator';
+    const validSection = SECTIONS.includes(sectionId) ? sectionId : 'home';
 
     // Update section active classes
     document.querySelectorAll('.app-section').forEach(sec => {
@@ -138,12 +167,14 @@ const App = (() => {
       targetSection.classList.add('active');
     }
 
-    // Update active nav links in sidebar
-    document.querySelectorAll('.nav-link').forEach(link => {
+    // Update active nav links in mobile drawer and desktop top navbar
+    document.querySelectorAll('.nav-link, .astra-nav-item a').forEach(link => {
       if (link.getAttribute('data-navigate') === validSection) {
         link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
       } else {
         link.classList.remove('active');
+        link.removeAttribute('aria-current');
       }
     });
 
@@ -179,26 +210,40 @@ const App = (() => {
    */
   const setupMobileDrawer = () => {
     const menuBtn = document.getElementById('mobile-menu-toggle-btn');
+    const closeBtn = document.getElementById('mobile-menu-close-btn');
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('sidebar-backdrop');
 
     if (menuBtn && sidebar) {
       menuBtn.addEventListener('click', () => {
-        sidebar.classList.toggle('mobile-open');
-        if (backdrop) backdrop.classList.toggle('active');
+        const isOpen = sidebar.classList.toggle('mobile-open');
+        if (backdrop) backdrop.classList.toggle('active', isOpen);
+        menuBtn.setAttribute('aria-expanded', String(isOpen));
       });
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeMobileDrawer);
     }
 
     if (backdrop) {
       backdrop.addEventListener('click', closeMobileDrawer);
     }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar && sidebar.classList.contains('mobile-open')) {
+        closeMobileDrawer();
+      }
+    });
   };
 
   const closeMobileDrawer = () => {
+    const menuBtn = document.getElementById('mobile-menu-toggle-btn');
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('sidebar-backdrop');
     if (sidebar) sidebar.classList.remove('mobile-open');
     if (backdrop) backdrop.classList.remove('active');
+    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
   };
 
   /**
@@ -209,24 +254,43 @@ const App = (() => {
     const backendUrl = (Utils.getBackendUrl ? Utils.getBackendUrl() : settings.backendUrl) || 'https://grade-pointer-ai-backend.vercel.app';
     const pill = document.getElementById('backend-status-pill');
     const pillText = document.getElementById('backend-status-text');
+    const advBadge = document.getElementById('adv-status-badge');
+    const chatBadge = document.getElementById('chat-backend-status-badge');
 
-    if (!pill || !pillText) return;
+    const syncToolBadges = (badgeClass, label) => {
+      if (advBadge) {
+        advBadge.className = `badge ${badgeClass}`;
+        advBadge.textContent = label;
+      }
+      if (chatBadge) {
+        chatBadge.className = `badge ${badgeClass}`;
+        chatBadge.innerHTML = `<span class="status-dot"></span> ${Utils.escapeHtml(label)}`;
+      }
+    };
 
     try {
       const res = await fetch(`${backendUrl}/api/health`, { method: 'GET' });
       if (res.ok) {
         const data = await res.json();
-        pill.className = 'backend-status-pill online';
-        const aiStatus = data.gemini_configured ? 'Gemini AI Active' : 'Backend Ready (No Key)';
-        pillText.textContent = aiStatus;
-        pill.title = 'Flask AI Backend is connected and running';
+        const isReady = Boolean(data.gemini_configured);
+        if (pill && pillText) {
+          pill.className = 'backend-status-pill online';
+          pillText.textContent = isReady ? 'Gemini AI Active' : 'API Key Missing';
+          pill.title = isReady
+            ? 'Flask AI Backend is connected and Gemini API is configured'
+            : 'Backend is reachable, but GEMINI_API_KEY is not configured';
+        }
+        syncToolBadges(isReady ? 'badge-success' : 'badge-warning', isReady ? 'Gemini AI Ready' : 'API Key Missing');
       } else {
         throw new Error('Non-200');
       }
     } catch (e) {
-      pill.className = 'backend-status-pill offline';
-      pillText.textContent = 'Local AI Engine';
-      pill.title = 'Backend offline or not started. Calculators & built-in AI working in Local Mode.';
+      if (pill && pillText) {
+        pill.className = 'backend-status-pill offline';
+        pillText.textContent = 'Backend Offline';
+        pill.title = 'Backend unreachable. Calculators work offline; AI tools require the backend.';
+      }
+      syncToolBadges('badge-danger', 'Backend Offline');
     }
   };
 
@@ -450,125 +514,26 @@ const App = (() => {
   };
 
   /**
-   * Render Astra AI Animated Hero Dashboard Preview Chart
+   * Restrained 3D Tilt on Homepage Tool Cards Only (desktop fine pointer, respects reduced motion)
    */
-  const initHeroPreviewChart = () => {
-    const canvas = document.getElementById('hero-preview-chart');
-    if (!canvas || !window.Chart) return;
+  const setupCardTilt = () => {
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (prefersReduced || !finePointer) return;
 
-    if (heroPreviewChartInstance) {
-      heroPreviewChartInstance.destroy();
-      heroPreviewChartInstance = null;
-    }
-
-    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-    const ctx = canvas.getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 0, 140);
-    gradient.addColorStop(0, isDark ? 'rgba(124, 58, 237, 0.45)' : 'rgba(124, 58, 237, 0.22)');
-    gradient.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
-
-    heroPreviewChartInstance = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Projected'],
-        datasets: [{
-          label: 'Academic Trajectory',
-          data: [3.65, 3.72, 3.80, 3.84, 3.92],
-          borderColor: '#8B5CF6',
-          borderWidth: 3,
-          backgroundColor: gradient,
-          fill: true,
-          tension: 0.38,
-          pointBackgroundColor: '#06B6D4',
-          pointBorderColor: '#FFFFFF',
-          pointBorderWidth: 2,
-          pointRadius: 4.5,
-          pointHoverRadius: 7
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: isDark ? '#0C1024' : '#FFFFFF',
-            titleColor: isDark ? '#F8FAFC' : '#0F172A',
-            bodyColor: '#38BDF8',
-            borderColor: isDark ? 'rgba(139, 92, 246, 0.4)' : '#E2E8F0',
-            borderWidth: 1,
-            padding: 8,
-            displayColors: false,
-            callbacks: {
-              label: (context) => `CGPA: ${context.parsed.y.toFixed(2)}`
-            }
-          }
-        },
-        scales: {
-          x: {
-            grid: { display: false },
-            ticks: { color: isDark ? '#94A3B8' : '#64748B', font: { size: 10, weight: 600 } }
-          },
-          y: {
-            min: 3.4,
-            max: 4.0,
-            grid: { color: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)' },
-            ticks: { color: isDark ? '#94A3B8' : '#64748B', font: { size: 10 }, stepSize: 0.2 }
-          }
-        }
-      }
-    });
-  };
-
-  /**
-   * Home Interactive Quick CGPA Estimator Widget
-   */
-  const initQuickHomeEstimator = () => {
-    const curIn = document.getElementById('home-qc-current');
-    const tgtIn = document.getElementById('home-qc-target');
-    const credIn = document.getElementById('home-qc-credits');
-    const compIn = document.getElementById('home-qc-completed');
-    const btn = document.getElementById('home-qc-calc-btn');
-    const resBox = document.getElementById('home-qc-result-box');
-    const valSpan = document.getElementById('home-qc-val');
-    const tagSpan = document.getElementById('home-qc-tag');
-    const noteSpan = document.getElementById('home-qc-note');
-
-    if (!btn || !curIn || !tgtIn) return;
-
-    btn.addEventListener('click', () => {
-      const cur = parseFloat(curIn.value);
-      const tgt = parseFloat(tgtIn.value);
-      const comp = parseFloat(compIn ? compIn.value : 60) || 60;
-      const cred = parseFloat(credIn ? credIn.value : 20) || 20;
-
-      if (isNaN(cur) || isNaN(tgt) || cur < 0 || tgt < 0) {
-        Utils.showToast('Please enter valid current and target CGPA values.', 'warning');
-        return;
-      }
-
-      // Formula: Required SGPA = (Target * (Completed + Upcoming) - (Current * Completed)) / Upcoming
-      const req = (tgt * (comp + cred) - (cur * comp)) / cred;
-      const formatted = req.toFixed(2);
-
-      if (resBox && valSpan) {
-        resBox.style.display = 'block';
-        valSpan.textContent = formatted;
-
-        if (req > 10.0 || (cur <= 4.0 && req > 4.0)) {
-          tagSpan.className = 'badge badge-danger';
-          tagSpan.textContent = 'Statistically Impossible in 1 Term';
-          noteSpan.textContent = 'This target requires higher credits than mathematically possible. Consider aiming for this over multiple semesters.';
-        } else if ((req > 3.85 && cur <= 4.0) || req > 9.2) {
-          tagSpan.className = 'badge badge-warning';
-          tagSpan.textContent = 'High Demand Target';
-          noteSpan.textContent = 'Requires an almost perfect term (mostly A/A+ grades). Focus heavily on high-credit courses.';
-        } else {
-          tagSpan.className = 'badge badge-success';
-          tagSpan.textContent = 'Achievable Goal';
-          noteSpan.textContent = 'A solid, realistic semester trajectory. Consistent study routines will secure this score!';
-        }
-      }
+    const cards = document.querySelectorAll('#section-home .astra-feature-card');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        const rotateX = (-y * 3).toFixed(2);
+        const rotateY = (x * 3).toFixed(2);
+        card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
     });
   };
 

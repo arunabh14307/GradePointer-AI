@@ -184,7 +184,7 @@
 }
 
 /* --- Astra AI Responsive Enhancements --- */
-@media (min-width: 961px) {
+@media (min-width: 1081px) {
   .mobile-menu-btn {
     display: none !important;
   }
@@ -197,13 +197,35 @@
   }
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1080px) {
   .astra-nav-links {
     display: none !important;
   }
   .mobile-menu-btn {
     display: inline-flex !important;
   }
+  .sidebar {
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
+    z-index: 1200;
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg-modal-backdrop);
+    backdrop-filter: blur(4px);
+    z-index: 1150;
+  }
+  .sidebar-backdrop.active {
+    display: block;
+  }
+}
+
+@media (max-width: 960px) {
   .astra-hero-grid {
     grid-template-columns: 1fr;
     gap: 2.5rem;
@@ -245,24 +267,74 @@
     grid-template-columns: 1fr;
   }
   .astra-hero-section {
-    padding: 2.5rem 1rem 3.5rem;
+    padding: 2rem 0 2.5rem;
   }
-  .home-quick-calc-wrapper {
-    padding: 1.5rem 1rem;
+
+  .chat-card {
+    min-height: 420px;
+    max-height: calc(100dvh - 180px);
   }
+
+  .pct-subtabs-nav {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .modal-dialog {
+    max-height: 90dvh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .astra-nav-actions {
+    gap: 0.45rem;
+  }
+
+  .backend-status-pill {
+    font-size: 0.72rem;
+    padding: 0.25rem 0.55rem;
+  }
+
+  .theme-toggle-btn {
+    padding: 0 0.55rem;
+  }
+
+  .theme-toggle-label {
+    display: none;
+  }
+
+  .btn-quick {
+    min-height: 36px;
+    min-width: 40px;
+  }
+}
+
+/* --- Keyboard Accessibility Focus --- */
+.astra-nav-item a:focus-visible,
+.astra-nav-brand:focus-visible,
+.btn:focus-visible,
+.btn-astra-cta:focus-visible,
+.theme-toggle-btn:focus-visible,
+.mobile-menu-btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
 }
 
 /* --- Print Styles --- */
 @media print {
   .sidebar,
   .app-header,
+  .astra-navbar,
   .chat-input-bar,
   .chat-prompt-chips,
   .section-header-actions,
   .btn,
   .theme-toggle-btn,
   #toast-container,
-  .app-footer {
+  .app-footer,
+  .astra-footer {
     display: none !important;
   }
 
