@@ -24,10 +24,16 @@ const AiChat = (() => {
 
   // Voice recognition state (Web Speech API)
   const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  const VOICE_MAX_DURATION_MS = 5000;
   let recognition = null;
   let isListening = false;
   let voiceBaseText = '';
+  let voiceAccumulatedFinal = '';
   let voiceCancelled = false;
+  let voiceManualStop = false;
+  let voiceTimeoutId = null;
+  let voiceCountdownId = null;
+  let voiceDeadlineMs = 0;
 
   /**
    * Initialize module
@@ -629,6 +635,63 @@ const AiChat = (() => {
   };
 
   /**
+   * Clear any active voice recognition timers
+   */
+  const clearVoiceTimers = () => {
+    if (voiceTimeoutId !== null) {
+      clearTimeout(voiceTimeoutId);
+      voiceTimeoutId = null;
+    }
+    if (voiceCountdownId !== null) {
+      clearInterval(voiceCountdownId);
+      voiceCountdownId = null;
+    }
+  };
+
+  /**
+   * Stop an active recognition session immediately
+   */
+  const stopVoiceInput = (reason = 'manual') => {
+    clearVoiceTimers();
+    voiceManualStop = true;
+    isListening = false;
+    updateMicButtonState(false);
+
+    if (recognition) {
+      try {
+        if (reason === 'cancel') {
+          recognition.abort();
+        } else {
+          recognition.stop();
+        }
+      } catch (e) {
+        // Ignore if recognition already ended
+      }
+    }
+
+    if (reason === 'cancel') {
+      const inputField = document.getElementById('chat-input-field');
+      if (inputField) {
+        inputField.value = voiceBaseText;
+        updateCharCounter();
+        inputField.style.height = 'auto';
+        inputField.style.height = `${Math.min(inputField.scrollHeight, 120)}px`;
+      }
+      hideVoiceStatus();
+    } else if (reason === 'timeout') {
+      const inputField = document.getElementById('chat-input-field');
+      if (inputField && inputField.value.trim()) {
+        hideVoiceStatus();
+        inputField.focus();
+      } else {
+        showVoiceStatus('No speech detected. Tap Speak and try again.', true, true);
+      }
+    } else {
+      hideVoiceStatus();
+    }
+  };
+
+  /**
    * Start or stop speech recognition on explicit user click
    */
   const toggleVoiceInput = () => {
@@ -637,125 +700,193 @@ const AiChat = (() => {
       return;
     }
 
-    if (isListening && recognition) {
+    // If already listening, manual click stops recognition immediately
+    if (isListening) {
       voiceCancelled = false;
-      recognition.stop();
+      stopVoiceInput('manual');
       return;
+    }
+
+    // Prevent overlapping sessions or timers
+    clearVoiceTimers();
+    if (recognition) {
+      try {
+        recognition.onstart = null;
+        recognition.onresult = null;
+        recognition.onerror = null;
+        recognition.onend = null;
+        recognition.abort();
+      } catch (e) {
+        // Ignore cleanup errors
+      }
+      recognition = null;
     }
 
     const inputField = document.getElementById('chat-input-field');
     const langSelect = document.getElementById('chat-voice-lang');
     voiceBaseText = inputField ? inputField.value.trim() : '';
+    voiceAccumulatedFinal = '';
     voiceCancelled = false;
+    voiceManualStop = false;
 
-    try {
-      recognition = new SpeechRecognitionAPI();
-      recognition.continuous = false;
-      recognition.interimResults = true;
-      recognition.maxAlternatives = 1;
-      recognition.lang = (langSelect && langSelect.value) ? langSelect.value : 'en-IN';
-    } catch (err) {
-      showVoiceStatus("Voice input couldn't be started in this browser.", true, true);
-      return;
-    }
-
-    let hadError = false;
-    let finalTranscript = '';
-
-    recognition.onstart = () => {
-      isListening = true;
-      updateMicButtonState(true);
-      showVoiceStatus('Listening… Speak your question', false, true);
-    };
-
-    recognition.onresult = (event) => {
-      if (voiceCancelled || !inputField) return;
-      let interimTranscript = '';
-      finalTranscript = '';
-
-      for (let i = 0; i < event.results.length; i++) {
-        const transcript = event.results[i][0] ? event.results[i][0].transcript : '';
-        if (event.results[i].isFinal) {
-          finalTranscript += transcript;
-        } else {
-          interimTranscript += transcript;
-        }
-      }
-
-      const spoken = `${finalTranscript}${interimTranscript}`.trim();
-      const combined = voiceBaseText
-        ? (spoken ? `${voiceBaseText} ${spoken}` : voiceBaseText)
-        : spoken;
-
-      inputField.value = combined.slice(0, 2000);
-      updateCharCounter();
-      inputField.style.height = 'auto';
-      inputField.style.height = `${Math.min(inputField.scrollHeight, 120)}px`;
-    };
-
-    recognition.onerror = (event) => {
-      hadError = true;
-      const errCode = event && event.error ? event.error : 'unknown';
-
-      if (voiceCancelled && errCode === 'aborted') {
+    const createAndStartSession = () => {
+      try {
+        recognition = new SpeechRecognitionAPI();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 1;
+        recognition.lang = (langSelect && langSelect.value) ? langSelect.value : 'en-IN';
+      } catch (err) {
+        clearVoiceTimers();
+        isListening = false;
+        updateMicButtonState(false);
+        showVoiceStatus("Voice input couldn't be started in this browser.", true, true);
         return;
       }
 
-      let message = 'Voice recognition ran into an error. Please try again.';
-      if (errCode === 'not-allowed' || errCode === 'service-not-allowed') {
-        message = 'Microphone permission was denied. Allow mic access in your browser settings and try again.';
-      } else if (errCode === 'no-speech') {
-        message = 'No speech detected. Tap Speak and try again.';
-      } else if (errCode === 'audio-capture') {
-        message = 'No microphone was found. Check your audio input device and try again.';
-      } else if (errCode === 'network') {
-        message = 'Voice recognition needs an active connection in this browser.';
-      } else if (errCode === 'aborted') {
-        message = 'Voice input was stopped.';
-      }
+      let hadFatalError = false;
+      let shouldRestartForWindow = false;
+      let sessionFinal = '';
 
-      showVoiceStatus(message, true, true);
-      Utils.showToast(message, 'warning');
+      recognition.onstart = () => {
+        isListening = true;
+        updateMicButtonState(true);
+
+        // Start the 5-second window only once when initial session begins
+        if (voiceTimeoutId === null) {
+          voiceDeadlineMs = Date.now() + VOICE_MAX_DURATION_MS;
+          showVoiceStatus('Listening… (5s)', false, true);
+
+          voiceCountdownId = setInterval(() => {
+            if (!isListening) {
+              clearVoiceTimers();
+              return;
+            }
+            const remainingSec = Math.max(1, Math.ceil((voiceDeadlineMs - Date.now()) / 1000));
+            showVoiceStatus(`Listening… (${remainingSec}s)`, false, true);
+          }, 250);
+
+          voiceTimeoutId = setTimeout(() => {
+            if (isListening) {
+              stopVoiceInput('timeout');
+            }
+          }, VOICE_MAX_DURATION_MS);
+        }
+      };
+
+      recognition.onresult = (event) => {
+        if (voiceCancelled || !inputField) return;
+        let interimTranscript = '';
+        sessionFinal = '';
+
+        for (let i = 0; i < event.results.length; i++) {
+          const transcript = event.results[i][0] ? event.results[i][0].transcript : '';
+          if (event.results[i].isFinal) {
+            sessionFinal += transcript;
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        const fullSpoken = `${voiceAccumulatedFinal} ${sessionFinal} ${interimTranscript}`.replace(/\s+/g, ' ').trim();
+        const combined = voiceBaseText
+          ? (fullSpoken ? `${voiceBaseText} ${fullSpoken}` : voiceBaseText)
+          : fullSpoken;
+
+        inputField.value = combined.slice(0, 2000);
+        updateCharCounter();
+        inputField.style.height = 'auto';
+        inputField.style.height = `${Math.min(inputField.scrollHeight, 120)}px`;
+      };
+
+      recognition.onerror = (event) => {
+        const errCode = event && event.error ? event.error : 'unknown';
+
+        if (voiceCancelled || voiceManualStop) {
+          return;
+        }
+
+        // If browser ended early on silence while 5s window still has time left, restart seamlessly
+        if (errCode === 'no-speech' && isListening && (voiceDeadlineMs - Date.now()) > 600) {
+          shouldRestartForWindow = true;
+          return;
+        }
+
+        hadFatalError = true;
+        clearVoiceTimers();
+        isListening = false;
+        updateMicButtonState(false);
+
+        let message = 'Voice recognition ran into an error. Please try again.';
+        if (errCode === 'not-allowed' || errCode === 'service-not-allowed') {
+          message = 'Microphone permission was denied. Allow mic access in your browser settings and try again.';
+        } else if (errCode === 'no-speech') {
+          message = 'No speech detected. Tap Speak and try again.';
+        } else if (errCode === 'audio-capture') {
+          message = 'No microphone was found. Check your audio input device and try again.';
+        } else if (errCode === 'network') {
+          message = 'Voice recognition needs an active connection in this browser.';
+        } else if (errCode === 'aborted') {
+          message = 'Voice input was stopped.';
+        }
+
+        showVoiceStatus(message, true, true);
+        Utils.showToast(message, 'warning');
+      };
+
+      recognition.onend = () => {
+        if (sessionFinal) {
+          voiceAccumulatedFinal = `${voiceAccumulatedFinal} ${sessionFinal}`.trim();
+        }
+
+        if (voiceCancelled || voiceManualStop) {
+          clearVoiceTimers();
+          isListening = false;
+          updateMicButtonState(false);
+          return;
+        }
+
+        // Keep listening for the full 5s window if browser stopped early without fatal error
+        if (!hadFatalError && (shouldRestartForWindow || (isListening && (voiceDeadlineMs - Date.now()) > 600))) {
+          shouldRestartForWindow = false;
+          createAndStartSession();
+          return;
+        }
+
+        clearVoiceTimers();
+        isListening = false;
+        updateMicButtonState(false);
+
+        if (!hadFatalError) {
+          if (inputField && inputField.value.trim()) {
+            hideVoiceStatus();
+            inputField.focus();
+          } else {
+            showVoiceStatus('No speech detected. Tap Speak and try again.', true, true);
+          }
+        }
+      };
+
+      try {
+        recognition.start();
+      } catch (err) {
+        clearVoiceTimers();
+        isListening = false;
+        updateMicButtonState(false);
+        showVoiceStatus('Unable to start microphone listening. Please try again.', true, true);
+      }
     };
 
-    recognition.onend = () => {
-      isListening = false;
-      updateMicButtonState(false);
-
-      if (voiceCancelled) {
-        if (inputField) {
-          inputField.value = voiceBaseText;
-          updateCharCounter();
-          inputField.style.height = 'auto';
-          inputField.style.height = `${Math.min(inputField.scrollHeight, 120)}px`;
-        }
-        hideVoiceStatus();
-        return;
-      }
-
-      if (!hadError) {
-        hideVoiceStatus();
-        if (inputField && inputField.value.trim()) {
-          inputField.focus();
-        }
-      }
-    };
-
-    try {
-      recognition.start();
-    } catch (err) {
-      isListening = false;
-      updateMicButtonState(false);
-      showVoiceStatus('Unable to start microphone listening. Please try again.', true, true);
-    }
+    createAndStartSession();
   };
 
   const cancelVoiceInput = () => {
-    if (isListening && recognition) {
+    if (isListening || recognition) {
       voiceCancelled = true;
-      recognition.abort();
+      stopVoiceInput('cancel');
       return;
     }
+    clearVoiceTimers();
     hideVoiceStatus();
   };
 
@@ -782,6 +913,18 @@ const AiChat = (() => {
         cancelVoiceInput();
       });
     }
+
+    // Clean up timers/recognition if page is unloaded
+    window.addEventListener('pagehide', () => {
+      clearVoiceTimers();
+      if (isListening && recognition) {
+        try {
+          recognition.abort();
+        } catch (e) {}
+      }
+      isListening = false;
+      updateMicButtonState(false);
+    });
 
     // Send button click
     if (sendBtn) {
