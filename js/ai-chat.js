@@ -37,7 +37,7 @@ const AiChat = (() => {
   const getDefaultWelcomeMessage = () => {
     return {
       sender: 'bot',
-      message: `Hello! I am your **GradePilot AI Academic Assistant** 🎓\n\nI can help you in **English** or **Hinglish**:\n* **Predict Required SGPA:** Target CGPA achieve karne ke liye kya scores chahiye.\n* **Explain Your CGPA:** Credit-weighted GPA kaise calculate hota hai.\n* **Convert to Percentage:** AICTE & standard formulas se exact percentage.\n* **Subject Guidance:** Mathematics aur core subjects me improve karne ke strategies.\n* **Weekly Study Planning:** Balanced, personalized study routines.\n\nAsk me any question below or click one of the suggested questions above!`,
+      message: `Hi! I'm **GradePilot**. Ask me about your **CGPA, target SGPA, study plan, or subjects** — in English or Hinglish.\n\nPick a suggested question above or type your own below.`,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       isWelcome: true
     };

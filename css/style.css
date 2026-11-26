@@ -2552,6 +2552,60 @@ select.form-control {
   border: 1px solid var(--border-color);
 }
 
+.chat-page-shell {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.chat-clear-btn {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.chat-clear-btn:hover {
+  color: var(--text-main);
+}
+
+.chat-more-questions {
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.chat-more-questions summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: color var(--transition-fast);
+}
+
+.chat-more-questions summary::-webkit-details-marker {
+  display: none;
+}
+
+.chat-more-questions summary:hover {
+  color: var(--text-main);
+}
+
+.chat-more-questions summary i {
+  font-size: 0.7rem;
+  transition: transform var(--transition-fast);
+}
+
+.chat-more-questions[open] summary i {
+  transform: rotate(180deg);
+}
+
+.chat-more-chips {
+  margin-top: 0.65rem;
+}
+
 .chat-suggestions-header {
   display: flex;
   align-items: center;

@@ -27,7 +27,7 @@ const App = (() => {
     'ai-advisor': 'AI Academic Advisor',
     'cgpa-predictor': 'AI CGPA Predictor',
     'study-planner': 'AI Study Planner',
-    'ai-chat': 'AI Chat Assistant',
+    'ai-chat': 'Ask GradePilot',
     'settings': 'Settings & Student Profile'
   };
 

@@ -2472,110 +2472,116 @@
         </section>
 
         <section id="section-ai-chat" class="app-section">
-          <div class="section-header">
-            <div class="section-header-content">
-              <h2>AI Academic Chat Assistant</h2>
-              <p>Bilingual academic copilot (English & Hinglish) with verified calculator integration.</p>
-            </div>
-            <div class="section-header-actions">
-              <span class="badge badge-success" id="chat-backend-status-badge">
-                <i class="fa-solid fa-circle-dot"></i> Gemini AI Online
-              </span>
-              <button id="chat-clear-btn" class="btn btn-outline btn-sm" title="Clear chat history">
-                <i class="fa-solid fa-trash-can"></i> Clear Conversation
-              </button>
-            </div>
-          </div>
-
-          <!-- Suggested Questions Bar -->
-          <div class="chat-suggestions-container card">
-            <div class="chat-suggestions-header">
-              <i class="fa-solid fa-lightbulb text-warning"></i>
-              <span>Suggested Questions</span>
-            </div>
-            <div class="chat-suggestions-chips" id="chat-suggestions-chips">
-              <button type="button" class="chat-suggestion-chip" data-question="Explain my CGPA.">
-                <i class="fa-solid fa-chart-pie"></i> Explain my CGPA.
-              </button>
-              <button type="button" class="chat-suggestion-chip" data-question="What SGPA do I need to reach my target?">
-                <i class="fa-solid fa-bullseye"></i> What SGPA do I need to reach my target?
-              </button>
-              <button type="button" class="chat-suggestion-chip" data-question="Help me improve Mathematics.">
-                <i class="fa-solid fa-square-root-variable"></i> Help me improve Mathematics.
-              </button>
-              <button type="button" class="chat-suggestion-chip" data-question="Create a weekly study plan.">
-                <i class="fa-solid fa-calendar-check"></i> Create a weekly study plan.
-              </button>
-              <button type="button" class="chat-suggestion-chip" data-question="Explain credit-weighted GPA.">
-                <i class="fa-solid fa-scale-balanced"></i> Explain credit-weighted GPA.
-              </button>
-              <button type="button" class="chat-suggestion-chip" data-question="Calculate my percentage.">
-                <i class="fa-solid fa-percent"></i> Calculate my percentage.
-              </button>
-            </div>
-          </div>
-
-          <!-- Main Chat Card -->
-          <div class="chat-card card">
-            <div class="chat-card-header">
-              <div class="chat-bot-info">
-                <div class="chat-bot-avatar">
-                  <i class="fa-solid fa-robot"></i>
-                </div>
-                <div class="chat-bot-meta">
-                  <div class="chat-bot-name">
-                    GradePilot AI Assistant
-                    <span class="chat-bilingual-badge"><i class="fa-solid fa-language"></i> English & Hinglish</span>
-                  </div>
-                  <div class="chat-bot-status">
-                    <span class="status-dot"></span> Ready for academic queries & verified calculations
-                  </div>
-                </div>
+          <div class="chat-page-shell">
+            <div class="section-header">
+              <div class="section-header-content">
+                <h2>Ask GradePilot</h2>
+                <p>Ask about grades, CGPA, or your study plan.</p>
+              </div>
+              <div class="section-header-actions">
+                <span class="badge badge-success" id="chat-backend-status-badge">
+                  <span class="status-dot"></span> Online
+                </span>
+                <button id="chat-clear-btn" class="btn btn-ghost btn-sm chat-clear-btn" title="Clear chat history">
+                  Clear Conversation
+                </button>
               </div>
             </div>
 
-            <!-- Messages Stream Area -->
-            <div id="chat-messages-container" class="chat-messages-stream" role="log" aria-live="polite"></div>
-
-            <!-- Typing Indicator (Toggled via JS) -->
-            <div id="chat-typing-indicator" class="chat-typing-bubble" style="display: none;">
-              <div class="chat-bot-avatar-mini">
-                <i class="fa-solid fa-robot"></i>
+            <!-- Suggested Questions Bar -->
+            <div class="chat-suggestions-container card">
+              <div class="chat-suggestions-header">
+                <span>Suggested Questions</span>
               </div>
-              <div class="typing-dots-wrapper">
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
+              <div class="chat-suggestions-chips" id="chat-suggestions-chips">
+                <button type="button" class="chat-suggestion-chip" data-question="Explain my CGPA">
+                  Explain my CGPA
+                </button>
+                <button type="button" class="chat-suggestion-chip" data-question="What SGPA do I need for my target?">
+                  What SGPA do I need for my target?
+                </button>
+                <button type="button" class="chat-suggestion-chip" data-question="Help me improve in a subject">
+                  Help me improve in a subject
+                </button>
+                <button type="button" class="chat-suggestion-chip" data-question="Create a weekly study plan">
+                  Create a weekly study plan
+                </button>
               </div>
-              <span class="typing-text">GradePilot is thinking...</span>
-            </div>
-
-            <!-- Input Bar -->
-            <div class="chat-input-wrapper">
-              <div class="chat-input-controls">
-                <textarea
-                  id="chat-input-field"
-                  class="chat-textarea"
-                  placeholder="Ask in English or Hinglish (e.g. 'What SGPA do I need for 8.5?' or 'Mera percentage kitna hoga?')..."
-                  rows="1"
-                  maxlength="2000"
-                ></textarea>
-                <div class="chat-input-actions">
-                  <span id="chat-char-counter" class="chat-counter">0 / 2000</span>
-                  <button id="chat-send-btn" class="btn btn-primary chat-submit-btn" aria-label="Send message">
-                    <i class="fa-solid fa-paper-plane"></i>
-                    <span>Send</span>
+              <details class="chat-more-questions">
+                <summary>More questions <i class="fa-solid fa-chevron-down"></i></summary>
+                <div class="chat-suggestions-chips chat-more-chips">
+                  <button type="button" class="chat-suggestion-chip" data-question="Explain credit-weighted GPA">
+                    Explain credit-weighted GPA
+                  </button>
+                  <button type="button" class="chat-suggestion-chip" data-question="Calculate my percentage">
+                    Calculate my percentage
                   </button>
                 </div>
-              </div>
+              </details>
             </div>
 
-            <!-- Academic Context & Privacy Notice -->
-            <div class="chat-security-disclaimer">
-              <i class="fa-solid fa-shield-halved"></i>
-              <span>
-                <strong>Academic Privacy & Math Accuracy:</strong> Inputs are validated client-side. Numerical inquiries use deterministic JavaScript calculator functions. GradePilot does not access private university records.
-              </span>
+            <!-- Main Chat Card -->
+            <div class="chat-card card">
+              <div class="chat-card-header">
+                <div class="chat-bot-info">
+                  <div class="chat-bot-avatar">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                  </div>
+                  <div class="chat-bot-meta">
+                    <div class="chat-bot-name">
+                      GradePilot
+                      <span class="chat-bilingual-badge">English &amp; Hinglish</span>
+                    </div>
+                    <div class="chat-bot-status">
+                      <span class="status-dot"></span> Ready to help
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Messages Stream Area -->
+              <div id="chat-messages-container" class="chat-messages-stream" role="log" aria-live="polite"></div>
+
+              <!-- Typing Indicator (Toggled via JS) -->
+              <div id="chat-typing-indicator" class="chat-typing-bubble" style="display: none;">
+                <div class="chat-bot-avatar-mini">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="typing-dots-wrapper">
+                  <div class="typing-dot"></div>
+                  <div class="typing-dot"></div>
+                  <div class="typing-dot"></div>
+                </div>
+                <span class="typing-text">GradePilot is thinking...</span>
+              </div>
+
+              <!-- Input Bar -->
+              <div class="chat-input-wrapper">
+                <div class="chat-input-controls">
+                  <textarea
+                    id="chat-input-field"
+                    class="chat-textarea"
+                    placeholder="Type your question…"
+                    rows="1"
+                    maxlength="2000"
+                  ></textarea>
+                  <div class="chat-input-actions">
+                    <span id="chat-char-counter" class="chat-counter">0 / 2000</span>
+                    <button id="chat-send-btn" class="btn btn-primary chat-submit-btn" aria-label="Send message">
+                      <i class="fa-solid fa-paper-plane"></i>
+                      <span>Send</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Academic Context & Privacy Notice -->
+              <div class="chat-security-disclaimer">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>
+                  Your inputs stay in your browser and are validated locally. Math queries use built-in calculator formulas; GradePilot does not access university records.
+                </span>
+              </div>
             </div>
           </div>
         </section>
