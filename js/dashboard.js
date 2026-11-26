@@ -149,6 +149,41 @@ const Dashboard = (() => {
     if (elSubjectsCount) {
       elSubjectsCount.textContent = totalSubjectsCount > 0 ? totalSubjectsCount : '0';
     }
+
+    // Update Homepage Hero CGPA Progress Ring (real state if present, clearly labeled example otherwise)
+    const heroBadge = document.getElementById('hero-preview-badge');
+    const heroValue = document.getElementById('hero-cgpa-value');
+    const heroScale = document.getElementById('hero-cgpa-scale');
+    const heroNote = document.getElementById('hero-preview-note');
+    const heroCredits = document.getElementById('hero-meta-credits');
+    const heroSubjects = document.getElementById('hero-meta-subjects');
+    const heroRing = document.getElementById('hero-cgpa-ring-fill');
+
+    if (heroValue && heroRing) {
+      const settings = Storage.getSettings ? Storage.getSettings() : {};
+      const scaleMax = settings.gradingScale === '4.0' ? 4.0 : 10.0;
+      const hasRealData = calculatedCgpa > 0;
+      const displayScore = hasRealData ? calculatedCgpa : (scaleMax === 4.0 ? 3.50 : 8.50);
+      const ratio = Math.max(0, Math.min(1, displayScore / scaleMax));
+      const circumference = 2 * Math.PI * 50; // r = 50 => ~314.16
+
+      heroValue.textContent = Utils.formatNumber(displayScore, 2);
+      if (heroScale) heroScale.textContent = `/ ${scaleMax.toFixed(1)}`;
+      if (heroBadge) {
+        heroBadge.className = hasRealData ? 'badge badge-cyan' : 'badge badge-neutral';
+        heroBadge.textContent = hasRealData ? 'Your Saved Record' : 'Example Preview';
+      }
+      if (heroNote) {
+        heroNote.textContent = hasRealData
+          ? 'Calculated from your saved coursework and semester records.'
+          : 'Example only — add your courses to track your real CGPA.';
+      }
+      if (heroCredits) heroCredits.textContent = hasRealData && displayedCredits > 0 ? String(displayedCredits) : '--';
+      if (heroSubjects) heroSubjects.textContent = hasRealData && totalSubjectsCount > 0 ? String(totalSubjectsCount) : '--';
+
+      heroRing.style.strokeDasharray = `${circumference.toFixed(2)}`;
+      heroRing.style.strokeDashoffset = `${(circumference * (1 - ratio)).toFixed(2)}`;
+    }
   };
 
   /**

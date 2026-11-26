@@ -617,6 +617,19 @@ const CgpaCalculator = (() => {
     }
 
     if (elPerfMsg) elPerfMsg.textContent = result.performanceMessage;
+
+    // Update restrained circular scale progress ring using existing calculated CGPA
+    const elRingFill = document.getElementById('cgpa-progress-ring-fill');
+    const elRingScore = document.getElementById('cgpa-ring-score');
+    const elRingPct = document.getElementById('cgpa-ring-pct');
+    if (elRingFill) {
+      const ratio = Math.max(0, Math.min(1, result.cgpa / 10));
+      const circumference = 2 * Math.PI * 50;
+      elRingFill.style.strokeDasharray = `${circumference.toFixed(2)}`;
+      elRingFill.style.strokeDashoffset = `${(circumference * (1 - ratio)).toFixed(2)}`;
+    }
+    if (elRingScore) elRingScore.textContent = result.cgpa.toFixed(2);
+    if (elRingPct) elRingPct.textContent = `${Math.round((Math.max(0, Math.min(10, result.cgpa)) / 10) * 100)}% of 10.0 scale`;
   };
 
   /**

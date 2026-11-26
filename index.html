@@ -270,18 +270,63 @@
         <section id="section-home" class="app-section active">
           <!-- HERO SECTION -->
           <div class="astra-hero-section">
-            <div class="home-hero-block">
-              <h1 class="hero-headline">
-                Calculate your grades and plan your semester.
-              </h1>
-              <p class="hero-lead-text">
-                Use built-in calculators for grades and CGPA, or get study plans and feedback with GradePilot AI.
-              </p>
-              <div class="hero-cta-group">
-                <a href="#cgpa-calculator" class="btn-hero-primary" data-navigate="cgpa-calculator">
-                  <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
-                  <span>Open CGPA Calculator</span>
-                </a>
+            <div class="home-hero-grid">
+              <div class="home-hero-block">
+                <h1 class="hero-headline">
+                  Calculate your grades and plan your semester.
+                </h1>
+                <p class="hero-lead-text">
+                  Use built-in calculators for grades and CGPA, or get study plans and feedback with GradePilot AI.
+                </p>
+                <div class="hero-cta-group">
+                  <a href="#cgpa-calculator" class="btn-hero-primary press-feedback" data-navigate="cgpa-calculator">
+                    <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+                    <span>Open CGPA Calculator</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Tasteful CGPA Progress Ring Preview Card -->
+              <div id="hero-preview-card" class="hero-preview-card card section-enter" aria-label="CGPA progress summary">
+                <div class="hero-preview-header">
+                  <span class="hero-preview-title">CGPA Overview</span>
+                  <span id="hero-preview-badge" class="badge badge-neutral">Example Preview</span>
+                </div>
+
+                <div class="hero-ring-wrap">
+                  <svg class="hero-ring-svg" viewBox="0 0 120 120" width="120" height="120" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="heroRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#8B5CF6" />
+                        <stop offset="100%" stop-color="#06B6D4" />
+                      </linearGradient>
+                    </defs>
+                    <circle class="hero-ring-track" cx="60" cy="60" r="50" />
+                    <circle id="hero-cgpa-ring-fill" class="hero-ring-fill" cx="60" cy="60" r="50" stroke="url(#heroRingGrad)" />
+                  </svg>
+                  <div class="hero-ring-center">
+                    <span id="hero-cgpa-value" class="hero-ring-value">8.50</span>
+                    <span id="hero-cgpa-scale" class="hero-ring-scale">/ 10.0</span>
+                  </div>
+                </div>
+
+                <p id="hero-preview-note" class="hero-preview-note">
+                  Example only — add your courses to track your real CGPA.
+                </p>
+
+                <div class="hero-preview-meta">
+                  <div class="hero-meta-item">
+                    <span class="hero-meta-label">Credits</span>
+                    <span id="hero-meta-credits" class="hero-meta-val">--</span>
+                  </div>
+                  <div class="hero-meta-item">
+                    <span class="hero-meta-label">Subjects</span>
+                    <span id="hero-meta-subjects" class="hero-meta-val">--</span>
+                  </div>
+                  <a href="#dashboard" class="hero-meta-link" data-navigate="dashboard">
+                    Dashboard <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -701,8 +746,33 @@
               </div>
             </div>
 
-            <!-- 5 Results Summary Cards -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <!-- Results Overview: Progress Ring + 5 Summary Cards -->
+            <div class="cgpa-result-overview">
+              <div class="cgpa-ring-panel" aria-label="CGPA scale progress">
+                <div class="cgpa-ring-wrap">
+                  <svg class="hero-ring-svg" viewBox="0 0 120 120" width="120" height="120" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="cgpaRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#8B5CF6" />
+                        <stop offset="100%" stop-color="#06B6D4" />
+                      </linearGradient>
+                    </defs>
+                    <circle class="hero-ring-track" cx="60" cy="60" r="50" />
+                    <circle id="cgpa-progress-ring-fill" class="hero-ring-fill" cx="60" cy="60" r="50" stroke="url(#cgpaRingGrad)" />
+                  </svg>
+                  <div class="hero-ring-center">
+                    <span id="cgpa-ring-score" class="hero-ring-value">0.00</span>
+                    <span class="hero-ring-scale">/ 10.0</span>
+                  </div>
+                </div>
+                <div class="cgpa-ring-caption">
+                  <span class="cgpa-ring-title">Scale Progress</span>
+                  <span id="cgpa-ring-pct" class="cgpa-ring-sub">0% of 10.0 scale</span>
+                </div>
+              </div>
+
+              <!-- 5 Results Summary Cards -->
+              <div class="cgpa-stats-grid">
               <div class="stat-card stat-cyan">
                 <div class="stat-icon"><i class="fa-solid fa-graduation-cap"></i></div>
                 <div class="stat-info">
@@ -741,6 +811,7 @@
                   <span class="stat-label">Result Status</span>
                   <span id="status-text" class="stat-value" style="font-size: 1.15rem; color: var(--text-main);">-</span>
                 </div>
+              </div>
               </div>
             </div>
 
