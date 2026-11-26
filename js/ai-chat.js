@@ -69,36 +69,29 @@ const AiChat = (() => {
     );
 
     if (isTargetQuery) {
-      // Pull inputs from predictor inputs or stored profile defaults
-      const curCgpa = parseFloat(document.getElementById('pred-current-cgpa')?.value) || parseFloat(profile.currentCgpa) || 7.5;
-      const tgtCgpa = parseFloat(document.getElementById('pred-target-cgpa')?.value) || parseFloat(profile.targetCgpa) || 8.5;
-      const compCreds = parseFloat(document.getElementById('pred-completed-credits')?.value) || parseFloat(profile.completedCredits) || 60;
-      const upCreds = parseFloat(document.getElementById('pred-upcoming-credits')?.value) || 20;
+      // Pull inputs from stored profile defaults
+      const curCgpa = parseFloat(profile.currentCgpa) || 7.5;
+      const tgtCgpa = parseFloat(profile.targetCgpa) || 8.5;
+      const compCreds = parseFloat(profile.completedCredits) || 60;
+      const upCreds = 20;
       const scale = 10.0;
 
-      // Deterministic authoritative calculation using CgpaPredictor
-      let prediction = null;
-      if (typeof CgpaPredictor !== 'undefined' && CgpaPredictor.computePrediction) {
-        prediction = CgpaPredictor.computePrediction(curCgpa, compCreds, upCreds, tgtCgpa, scale);
-      } else {
-        // Fallback formula if predictor object is not in scope
-        const totalCreds = compCreds + upCreds;
-        const targetPts = tgtCgpa * totalCreds;
-        const curPts = curCgpa * compCreds;
-        const needed = (targetPts - curPts) / upCreds;
-        const reqSgpa = Math.round(needed * 100) / 100;
-        const maxAchievable = Math.round(((curPts + scale * upCreds) / totalCreds) * 100) / 100;
-        prediction = {
-          currentCgpa: curCgpa,
-          targetCgpa: tgtCgpa,
-          completedCredits: compCreds,
-          upcomingCredits: upCreds,
-          requiredSgpa: reqSgpa,
-          maxAchievableCgpa: maxAchievable,
-          isImpossible: reqSgpa > scale,
-          status: reqSgpa > scale ? 'Mathematically Impossible' : 'Feasible'
-        };
-      }
+      const totalCreds = compCreds + upCreds;
+      const targetPts = tgtCgpa * totalCreds;
+      const curPts = curCgpa * compCreds;
+      const needed = (targetPts - curPts) / upCreds;
+      const reqSgpa = Math.round(needed * 100) / 100;
+      const maxAchievable = Math.round(((curPts + scale * upCreds) / totalCreds) * 100) / 100;
+      const prediction = {
+        currentCgpa: curCgpa,
+        targetCgpa: tgtCgpa,
+        completedCredits: compCreds,
+        upcomingCredits: upCreds,
+        requiredSgpa: reqSgpa,
+        maxAchievableCgpa: maxAchievable,
+        isImpossible: reqSgpa > scale,
+        status: reqSgpa > scale ? 'Mathematically Impossible' : 'Feasible'
+      };
 
       context.currentCgpa = curCgpa;
       context.targetCgpa = tgtCgpa;

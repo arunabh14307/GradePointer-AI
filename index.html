@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="GradePilot AI - Calculate Smarter. Study Better. Achieve More. Academic Calculator for Grades, CGPA/TGPA, and Percentages." />
-  <meta name="keywords" content="Grade Calculator, CGPA Calculator, TGPA Calculator, Percentage Calculator, GradePilot AI, Academic Productivity" />
+  <meta name="description" content="GradePilot AI - Calculate Smarter. Study Better. Achieve More. Academic Calculator for Grades and CGPA/TGPA." />
+  <meta name="keywords" content="Grade Calculator, CGPA Calculator, TGPA Calculator, GradePilot AI, Academic Productivity" />
   <meta name="author" content="GradePilot AI" />
-  <title>GradePilot AI — Academic Calculator (Grade, CGPA & Percentage)</title>
+  <title>GradePilot AI — Academic Calculator (Grade &amp; CGPA)</title>
 
   <!-- Prevent theme flash before stylesheet loads -->
   <script>
@@ -41,7 +41,7 @@
     });
     window.addEventListener('load', function() {
       var el = document.getElementById('runtime-error-debug');
-      var modules = ['Utils', 'AppStorage', 'GradeCalculator', 'CgpaCalculator', 'PercentageCalculator', 'AiAdvisor', 'CgpaPredictor', 'StudyPlanner', 'AiChat', 'Dashboard', 'App'];
+      var modules = ['Utils', 'AppStorage', 'GradeCalculator', 'CgpaCalculator', 'StudyPlanner', 'AiChat', 'Dashboard', 'App'];
       var loaded = modules.filter(function(m) { return typeof window[m] !== 'undefined'; });
       var missing = modules.filter(function(m) { return typeof window[m] === 'undefined'; });
       if (el) {
@@ -133,12 +133,6 @@
                 <span>CGPA Calculator</span>
               </a>
             </li>
-            <li>
-              <a href="#percentage-calculator" class="nav-link" data-navigate="percentage-calculator" id="nav-pct-calc">
-                <i class="fa-solid fa-percent"></i>
-                <span>Percentage</span>
-              </a>
-            </li>
           </ul>
         </div>
 
@@ -146,18 +140,6 @@
         <div>
           <div class="nav-group-title">AI Tools</div>
           <ul class="nav-list">
-            <li>
-              <a href="#ai-advisor" class="nav-link" data-navigate="ai-advisor" id="nav-ai-advisor">
-                <i class="fa-solid fa-brain"></i>
-                <span>AI Advisor</span>
-              </a>
-            </li>
-            <li>
-              <a href="#cgpa-predictor" class="nav-link" data-navigate="cgpa-predictor" id="nav-cgpa-predictor">
-                <i class="fa-solid fa-compass"></i>
-                <span>CGPA Predictor</span>
-              </a>
-            </li>
             <li>
               <a href="#study-planner" class="nav-link" data-navigate="study-planner" id="nav-study-planner">
                 <i class="fa-solid fa-calendar-check"></i>
@@ -238,16 +220,7 @@
               <li class="astra-nav-item">
                 <a href="#cgpa-calculator" data-navigate="cgpa-calculator">CGPA</a>
               </li>
-              <li class="astra-nav-item">
-                <a href="#percentage-calculator" data-navigate="percentage-calculator">Percentage</a>
-              </li>
               <li class="nav-divider" aria-hidden="true"></li>
-              <li class="astra-nav-item">
-                <a href="#ai-advisor" data-navigate="ai-advisor">AI Advisor</a>
-              </li>
-              <li class="astra-nav-item">
-                <a href="#cgpa-predictor" data-navigate="cgpa-predictor">Predictor</a>
-              </li>
               <li class="astra-nav-item">
                 <a href="#study-planner" data-navigate="study-planner">Study Planner</a>
               </li>
@@ -302,7 +275,7 @@
                 Calculate your grades and plan your semester.
               </h1>
               <p class="hero-lead-text">
-                Use built-in calculators for grades, CGPA, and percentages, or get study plans and feedback with GradePilot AI.
+                Use built-in calculators for grades and CGPA, or get study plans and feedback with GradePilot AI.
               </p>
               <div class="hero-cta-group">
                 <a href="#cgpa-calculator" class="btn-hero-primary" data-navigate="cgpa-calculator">
@@ -317,10 +290,10 @@
           <div class="astra-section home-tools-section">
             <div class="home-group-header">
               <h2>Calculators</h2>
-              <p>Start with your marks, credits, or target percentage.</p>
+              <p>Start with your marks or course credits.</p>
             </div>
 
-            <div class="home-cards-grid home-cards-3">
+            <div class="home-cards-grid home-cards-2">
               <a href="#cgpa-calculator" class="astra-feature-card" data-navigate="cgpa-calculator">
                 <div class="card-top-row">
                   <div class="feat-icon-glow feat-icon-purple" aria-hidden="true">
@@ -352,22 +325,6 @@
                   <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
                 </span>
               </a>
-
-              <a href="#percentage-calculator" class="astra-feature-card" data-navigate="percentage-calculator">
-                <div class="card-top-row">
-                  <div class="feat-icon-glow feat-icon-cyan" aria-hidden="true">
-                    <i class="fa-solid fa-percent"></i>
-                  </div>
-                </div>
-                <h3 class="feat-title">Percentage</h3>
-                <p class="feat-description">
-                  Convert marks to a percentage or find out how many marks you need to reach a target score.
-                </p>
-                <span class="feat-link-action">
-                  <span>Open calculator</span>
-                  <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-                </span>
-              </a>
             </div>
           </div>
 
@@ -379,38 +336,6 @@
             </div>
 
             <div class="home-cards-grid home-cards-2">
-              <a href="#ai-advisor" class="astra-feature-card" data-navigate="ai-advisor">
-                <div class="card-top-row">
-                  <div class="feat-icon-glow feat-icon-cyan" aria-hidden="true">
-                    <i class="fa-solid fa-brain"></i>
-                  </div>
-                </div>
-                <h3 class="feat-title">AI Advisor</h3>
-                <p class="feat-description">
-                  Review your subjects, grades, and study hours to get tailored improvement suggestions.
-                </p>
-                <span class="feat-link-action">
-                  <span>Open AI Advisor</span>
-                  <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-                </span>
-              </a>
-
-              <a href="#cgpa-predictor" class="astra-feature-card" data-navigate="cgpa-predictor">
-                <div class="card-top-row">
-                  <div class="feat-icon-glow feat-icon-emerald" aria-hidden="true">
-                    <i class="fa-solid fa-compass"></i>
-                  </div>
-                </div>
-                <h3 class="feat-title">CGPA Predictor</h3>
-                <p class="feat-description">
-                  Calculate the SGPA needed next term for your target CGPA and compare grade scenarios.
-                </p>
-                <span class="feat-link-action">
-                  <span>Open Predictor</span>
-                  <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-                </span>
-              </a>
-
               <a href="#study-planner" class="astra-feature-card" data-navigate="study-planner">
                 <div class="card-top-row">
                   <div class="feat-icon-glow feat-icon-amber" aria-hidden="true">
@@ -832,281 +757,6 @@
         </section>
 
         <!-- ====================================================================
-             3. PERCENTAGE CALCULATOR SECTION (Reference Spec)
-             ==================================================================== -->
-        <section id="section-percentage-calculator" class="app-section">
-          <div class="section-header">
-            <div class="section-header-content">
-              <h2>Percentage Suite</h2>
-              <p>Calculate your percentage from marks, find the score needed for a target percentage, or check how many more marks you need.</p>
-            </div>
-            <div class="section-header-actions">
-              <span class="badge badge-cyan">
-                <i class="fa-solid fa-calculator" aria-hidden="true"></i> Deterministic Formula
-              </span>
-            </div>
-          </div>
-
-          <!-- 3 Subtabs Container -->
-          <div class="card" style="margin-bottom: 2rem; padding: 0; overflow: hidden;">
-            <div class="pct-subtabs-nav" role="tablist" aria-label="Percentage tools">
-              <button type="button" class="pct-subtab-btn active" data-target="pane-marks-to-pct" role="tab" id="tab-btn-marks-to-pct" aria-selected="true" aria-controls="pane-marks-to-pct">
-                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Marks to Percentage
-              </button>
-              <button type="button" class="pct-subtab-btn" data-target="pane-pct-to-marks" role="tab" id="tab-btn-pct-to-marks" aria-selected="false" aria-controls="pane-pct-to-marks">
-                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Target Percentage to Marks
-              </button>
-              <button type="button" class="pct-subtab-btn" data-target="pane-additional-marks" role="tab" id="tab-btn-additional-marks" aria-selected="false" aria-controls="pane-additional-marks">
-                <i class="fa-solid fa-list-check" aria-hidden="true"></i> Additional Marks Needed
-              </button>
-            </div>
-
-            <!-- TAB 1: MARKS TO PERCENTAGE -->
-            <div id="pane-marks-to-pct" class="pct-subtab-pane active" style="padding: 1.5rem;" role="tabpanel" aria-labelledby="tab-btn-marks-to-pct">
-              <!-- Formula Banner -->
-              <div class="pct-formula-banner">
-                <div class="pct-formula-title">
-                  <i class="fa-solid fa-calculator" style="color: var(--primary);" aria-hidden="true"></i> Formula
-                </div>
-                <div class="pct-formula-math">
-                  percentage = (obtainedMarks ÷ totalMarks) × 100
-                </div>
-              </div>
-
-              <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                <span>Calculate Percentage from Marks</span>
-                <button type="button" class="btn btn-ghost btn-sm" onclick="PercentageCalculator.prefillTab1(420, 500)" style="font-size: 0.8rem; color: var(--primary);">
-                  Example: 420 / 500
-                </button>
-              </h3>
-
-              <!-- Inline Validation Error Alert -->
-              <div id="pct-tab1-error" class="pct-error-alert" role="alert"></div>
-
-              <form id="form-marks-to-pct" onsubmit="event.preventDefault(); PercentageCalculator.calculatePercentage();">
-                <div class="grid-3" style="gap: 1.25rem; align-items: start; margin-bottom: 1.5rem;">
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="marks-obtained">Obtained Marks (marks) <span class="req">*</span></label>
-                    <input type="number" id="marks-obtained" class="form-control" placeholder="e.g., 420" value="420" min="0" step="any" required />
-                    <span class="form-hint">Marks you scored (0 to Total Marks)</span>
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="total-marks">Total Marks (marks) <span class="req">*</span></label>
-                    <input type="number" id="total-marks" class="form-control" placeholder="e.g., 500" value="500" min="0.01" step="any" required />
-                    <span class="form-hint">Maximum possible marks (&gt; 0)</span>
-                  </div>
-                  <div class="form-group pct-action-row">
-                    <button type="button" id="btn-calc-marks-to-pct" class="btn btn-primary" style="flex: 1;">
-                      <i class="fa-solid fa-calculator" aria-hidden="true"></i> Calculate
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="PercentageCalculator.resetTab1()" title="Reset fields">
-                      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Reset
-                    </button>
-                  </div>
-                </div>
-              </form>
-
-              <!-- Result Display -->
-              <div id="percentage-result" class="calc-results-box" aria-live="polite" style="margin-top: 1rem;">
-                <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Calculated Percentage</span>
-                <div id="calculated-percentage" class="calc-score-display" style="color: var(--primary);">84.00%</div>
-                <div id="percentage-grade" class="calc-letter-grade" style="margin-bottom: 0.5rem;">Grade: A</div>
-                <div id="percentage-details" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">420 out of 500 marks</div>
-                <!-- Step by step breakdown -->
-                <div id="percentage-formula-step" class="pct-step-box">
-                  <strong><i class="fa-solid fa-circle-info"></i> Step-by-Step Calculation:</strong><br />
-                  <span>percentage = (420 ÷ 500) × 100 = 0.84 × 100 = 84.00%</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- TAB 2: PERCENTAGE TO REQUIRED MARKS -->
-            <div id="pane-pct-to-marks" class="pct-subtab-pane" style="padding: 1.5rem;" role="tabpanel" aria-labelledby="tab-btn-pct-to-marks">
-              <!-- Formula Banner -->
-              <div class="pct-formula-banner">
-                <div class="pct-formula-title">
-                  <i class="fa-solid fa-bullseye" style="color: var(--success);" aria-hidden="true"></i> Formula
-                </div>
-                <div class="pct-formula-math">
-                  requiredMarks = (targetPercentage ÷ 100) × totalMarks
-                </div>
-              </div>
-
-              <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                <span>Find Required Marks for Target Percentage</span>
-                <button type="button" class="btn btn-ghost btn-sm" onclick="PercentageCalculator.prefillTab2(85, 600)" style="font-size: 0.8rem; color: var(--primary);">
-                  Example: 85% of 600
-                </button>
-              </h3>
-
-              <!-- Inline Validation Error Alert -->
-              <div id="pct-tab2-error" class="pct-error-alert" role="alert"></div>
-
-              <form id="form-pct-to-marks" onsubmit="event.preventDefault(); PercentageCalculator.calculateRequiredMarks();">
-                <div class="grid-3" style="gap: 1.25rem; align-items: start; margin-bottom: 1.5rem;">
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="target-percentage">Target Percentage (0 – 100%) <span class="req">*</span></label>
-                    <input type="number" id="target-percentage" class="form-control" placeholder="e.g., 85" value="85" min="0" max="100" step="any" required />
-                    <span class="form-hint">Goal percentage between 0 and 100</span>
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="max-marks">Total Marks (marks) <span class="req">*</span></label>
-                    <input type="number" id="max-marks" class="form-control" placeholder="e.g., 600" value="600" min="0.01" step="any" required />
-                    <span class="form-hint">Maximum possible marks (&gt; 0)</span>
-                  </div>
-                  <div class="form-group pct-action-row">
-                    <button type="button" id="btn-calc-pct-to-marks" class="btn btn-primary" style="flex: 1;">
-                      <i class="fa-solid fa-calculator" aria-hidden="true"></i> Calculate
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="PercentageCalculator.resetTab2()" title="Reset fields">
-                      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Reset
-                    </button>
-                  </div>
-                </div>
-              </form>
-
-              <!-- Result Display -->
-              <div id="required-marks-result" class="calc-results-box" aria-live="polite" style="margin-top: 1rem;">
-                <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Required Score</span>
-                <div id="calculated-required-marks" class="calc-score-display" style="color: var(--success);">510 marks</div>
-                <div id="required-marks-whole-note" style="display: none;"></div>
-                <div id="required-marks-details" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Required to achieve 85% out of 600 total marks</div>
-                <!-- Step by step breakdown -->
-                <div id="required-marks-formula-step" class="pct-step-box">
-                  <strong><i class="fa-solid fa-circle-info"></i> Step-by-Step Calculation:</strong><br />
-                  <span>requiredMarks = (85 ÷ 100) × 600 = 0.85 × 600 = 510 marks</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- TAB 3: ADDITIONAL MARKS REQUIRED -->
-            <div id="pane-additional-marks" class="pct-subtab-pane" style="padding: 1.5rem;" role="tabpanel" aria-labelledby="tab-btn-additional-marks">
-              <!-- Formula Banner -->
-              <div class="pct-formula-banner">
-                <div class="pct-formula-title">
-                  <i class="fa-solid fa-arrow-trend-up" style="color: var(--accent-cyan);" aria-hidden="true"></i> Formula
-                </div>
-                <div class="pct-formula-math">
-                  requiredTotal = totalPossible × (desired% ÷ 100) &nbsp;|&nbsp; additional = requiredTotal - currentMarks
-                </div>
-              </div>
-
-              <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                <span>Calculate Additional Marks Needed</span>
-                <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
-                  <button type="button" class="btn btn-ghost btn-sm" onclick="PercentageCalculator.prefillTab3(300, 500, 75)" style="font-size: 0.8rem; color: var(--primary);">
-                    Example: 300 / 500 (75%)
-                  </button>
-                  <button type="button" class="btn btn-ghost btn-sm" onclick="PercentageCalculator.prefillTab3(400, 500, 75)" style="font-size: 0.8rem; color: var(--success);">
-                    Example: Target Achieved
-                  </button>
-                </div>
-              </h3>
-
-              <!-- Inline Validation Error Alert -->
-              <div id="pct-tab3-error" class="pct-error-alert" role="alert"></div>
-
-              <form id="form-additional-marks" onsubmit="event.preventDefault(); PercentageCalculator.calculateAdditionalMarks();">
-                <div class="grid-4" style="gap: 1.25rem; align-items: start; margin-bottom: 1.5rem;">
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="current-marks">Current Marks (marks) <span class="req">*</span></label>
-                    <input type="number" id="current-marks" class="form-control" placeholder="e.g., 300" value="300" min="0" step="any" required />
-                    <span class="form-hint">Earned so far (&ge; 0)</span>
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="total-possible">Total Possible Marks (marks) <span class="req">*</span></label>
-                    <input type="number" id="total-possible" class="form-control" placeholder="e.g., 500" value="500" min="0.01" step="any" required />
-                    <span class="form-hint">Maximum total (&gt; 0)</span>
-                  </div>
-                  <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" for="desired-percentage">Desired Target (0 – 100%) <span class="req">*</span></label>
-                    <input type="number" id="desired-percentage" class="form-control" placeholder="e.g., 75" value="75" min="0" max="100" step="any" required />
-                    <span class="form-hint">Goal percentage (0 – 100%)</span>
-                  </div>
-                  <div class="form-group pct-action-row">
-                    <button type="button" id="btn-calc-additional-marks" class="btn btn-primary" style="flex: 1;">
-                      <i class="fa-solid fa-calculator" aria-hidden="true"></i> Calculate
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="PercentageCalculator.resetTab3()" title="Reset fields">
-                      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Reset
-                    </button>
-                  </div>
-                </div>
-              </form>
-
-              <!-- Result Display -->
-              <div id="additional-marks-result" class="calc-results-box" aria-live="polite" style="margin-top: 1rem;">
-                <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Requirement Analysis</span>
-                <div id="calculated-additional-marks" class="calc-score-display" style="color: var(--accent-cyan);">75 additional marks</div>
-                <div id="additional-marks-whole-note" style="display: none;"></div>
-                <div id="additional-marks-details" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">needed to achieve 75% out of 500 total marks (Target total: 375 marks)</div>
-                <!-- Success Achieved Alert Container -->
-                <div id="pct-tab3-success" class="pct-success-banner" style="display: none;">
-                  <h4><i class="fa-solid fa-circle-check"></i> Target Already Achieved!</h4>
-                  <p id="pct-tab3-success-text" style="font-size: 0.9rem; margin: 0;">You have already reached or exceeded your target percentage.</p>
-                </div>
-                <!-- Step by step breakdown -->
-                <div id="additional-marks-formula-step" class="pct-step-box">
-                  <strong><i class="fa-solid fa-circle-info"></i> Step-by-Step Calculation:</strong><br />
-                  <span>requiredTotal = 500 × (75 ÷ 100) = 375 marks<br />additionalMarks = 375 - 300 = 75 additional marks</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Percentage Grade Scale Reference Grid -->
-          <div class="card" style="margin-bottom: 2rem;">
-            <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
-              <div>
-                <h3 class="card-title" style="font-size: 1.05rem;">
-                  <i class="fa-solid fa-chart-bar" style="color: var(--primary);"></i> Percentage Grading Reference
-                </h3>
-                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
-                  Standard percentage performance brackets. This percentage reference is independent of university grade-point mapping.
-                </p>
-              </div>
-            </div>
-            <div class="scale-grid">
-              <div class="scale-card scale-card-green">
-                <div class="scale-grade">A+</div>
-                <div class="scale-meta">90 – 100%</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Outstanding</div>
-              </div>
-              <div class="scale-card scale-card-blue">
-                <div class="scale-grade">A</div>
-                <div class="scale-meta">80 – 89%</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Excellent</div>
-              </div>
-              <div class="scale-card scale-card-indigo">
-                <div class="scale-grade">B+</div>
-                <div class="scale-meta">70 – 79%</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Very Good</div>
-              </div>
-              <div class="scale-card scale-card-purple">
-                <div class="scale-grade">B</div>
-                <div class="scale-meta">60 – 69%</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Good</div>
-              </div>
-              <div class="scale-card scale-card-yellow">
-                <div class="scale-grade">C+</div>
-                <div class="scale-meta">50 – 59%</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Above Average</div>
-              </div>
-              <div class="scale-card scale-card-orange">
-                <div class="scale-grade">C</div>
-                <div class="scale-meta">40 – 49%</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Average / Pass</div>
-              </div>
-              <div class="scale-card scale-card-red">
-                <div class="scale-grade">F</div>
-                <div class="scale-meta">0 – 39%</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Fail</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ====================================================================
              4. DASHBOARD SECTION (Accessible via Nav/Sidebar)
              ==================================================================== -->
         <section id="section-dashboard" class="app-section">
@@ -1172,27 +822,6 @@
                 <div class="quick-link-body">
                   <div class="quick-link-title">CGPA / TGPA</div>
                   <div class="quick-link-desc">Credit-weighted term & cumulative averages</div>
-                </div>
-              </a>
-              <a href="#percentage-calculator" class="quick-link-card" data-navigate="percentage-calculator">
-                <div class="quick-link-icon grad-icon-3"><i class="fa-solid fa-percent"></i></div>
-                <div class="quick-link-body">
-                  <div class="quick-link-title">Percentage Suite</div>
-                  <div class="quick-link-desc">Marks converter & required score planner</div>
-                </div>
-              </a>
-              <a href="#ai-advisor" class="quick-link-card" data-navigate="ai-advisor">
-                <div class="quick-link-icon grad-icon-4"><i class="fa-solid fa-brain"></i></div>
-                <div class="quick-link-body">
-                  <div class="quick-link-title">AI Academic Advisor</div>
-                  <div class="quick-link-desc">Performance diagnosis & study milestones</div>
-                </div>
-              </a>
-              <a href="#cgpa-predictor" class="quick-link-card" data-navigate="cgpa-predictor">
-                <div class="quick-link-icon grad-icon-5"><i class="fa-solid fa-chart-line"></i></div>
-                <div class="quick-link-body">
-                  <div class="quick-link-title">AI CGPA Predictor</div>
-                  <div class="quick-link-desc">Required future SGPA forecasting</div>
                 </div>
               </a>
               <a href="#study-planner" class="quick-link-card" data-navigate="study-planner">
@@ -1298,618 +927,8 @@
         </section>
 
         <!-- ====================================================================
-             5. AI ADVISOR, PREDICTOR, PLANNER, CHAT & SETTINGS (Accessible via Nav)
+             5. PLANNER, CHAT & SETTINGS (Accessible via Nav)
              ==================================================================== -->
-        <section id="section-ai-advisor" class="app-section">
-          <div class="section-header">
-            <div class="section-header-content">
-              <h2>AI Academic Advisor</h2>
-              <p>Reviews your grades, credits, and difficult subjects to suggest where to focus next.</p>
-            </div>
-            <div class="section-header-actions">
-              <span id="adv-status-badge" class="badge badge-secondary">
-                Checking status…
-              </span>
-            </div>
-          </div>
-
-          <!-- Privacy & Official University Advisory Notices -->
-          <div class="grid-2" style="gap: 1rem; margin-bottom: 1.5rem;">
-            <div class="card" style="background: var(--accent-cyan-light); border-left: 4px solid var(--accent-cyan); padding: 1rem 1.25rem; margin-bottom: 0;">
-              <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Data Privacy
-              </h4>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
-                Only the academic details you enter below are sent to the backend for this analysis. No passwords or university logins are collected.
-              </p>
-            </div>
-
-            <div class="card" style="background: var(--warning-light); border-left: 4px solid var(--warning); padding: 1rem 1.25rem; margin-bottom: 0;">
-              <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--warning); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Academic Advisory Notice
-              </h4>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
-                AI-generated study guidance for personal planning only. It does <strong>not</strong> replace an official university transcript, academic audit, or degree evaluation.
-              </p>
-            </div>
-          </div>
-
-          <!-- Student Academic Input Form -->
-          <div class="card" style="margin-bottom: 2rem;">
-            <form id="adv-form">
-              <!-- Top Row: Core Academic Standing -->
-              <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fa-solid fa-user-graduate" style="color: var(--primary);" aria-hidden="true"></i> 1. Academic Standing (Optional)
-              </h3>
-
-              <div class="grid-4" style="gap: 1.25rem; margin-bottom: 1.5rem;">
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="adv-current-cgpa">Current CGPA (0 – 10)</label>
-                  <input type="number" id="adv-current-cgpa" class="form-control" placeholder="e.g. 3.45 or 8.20" step="0.01" min="0" max="10" />
-                  <span class="form-hint">Your cumulative GPA so far</span>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="adv-target-cgpa">Target CGPA or Goal</label>
-                  <input type="text" id="adv-target-cgpa" class="form-control" placeholder="e.g. 3.80 or Dean's List" />
-                  <span class="form-hint">Score or milestone you are aiming for</span>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="adv-major">Major / Program</label>
-                  <input type="text" id="adv-major" class="form-control" placeholder="e.g. Computer Science" />
-                  <span class="form-hint">Your field of study</span>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="adv-hours">Weekly Study Hours (hrs/week)</label>
-                  <input type="number" id="adv-hours" class="form-control" placeholder="e.g. 18" value="18" min="0.5" max="168" step="0.5" />
-                  <span class="form-hint">Hours available per week (0.5 – 168)</span>
-                </div>
-              </div>
-
-              <!-- Subject & Course Performance Table -->
-              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem;">
-                <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                  <i class="fa-solid fa-list-check" style="color: var(--primary);" aria-hidden="true"></i> 2. Your Courses
-                </h3>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                  <button type="button" id="adv-import-btn" class="btn btn-secondary btn-sm" title="Import courses entered in CGPA Calculator">
-                    <i class="fa-solid fa-file-import" aria-hidden="true"></i> Import From CGPA Calculator
-                  </button>
-                  <button type="button" id="adv-add-subject-btn" class="btn btn-primary btn-sm">
-                    <i class="fa-solid fa-plus" aria-hidden="true"></i> Add Course
-                  </button>
-                </div>
-              </div>
-
-              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-                Add your current or completed courses with grade points (0 – 10) and credit hours, or import them from the CGPA Calculator.
-              </p>
-
-              <!-- Dynamic Subjects Table -->
-              <div class="table-responsive" style="margin-bottom: 1.5rem;">
-                <table class="data-table" id="adv-subjects-table">
-                  <thead>
-                    <tr>
-                      <th style="min-width: 180px;">Subject Name</th>
-                      <th style="width: 130px;">Grade Point (0–10)</th>
-                      <th style="width: 110px;">Credits</th>
-                      <th style="width: 130px;">Marks (Optional)</th>
-                      <th style="width: 60px; text-align: center;">Remove</th>
-                    </tr>
-                  </thead>
-                  <tbody id="adv-subjects-body">
-                    <!-- Dynamic rows rendered by AiAdvisor -->
-                  </tbody>
-                </table>
-              </div>
-
-              <!-- Context, Semester History & Bottlenecks -->
-              <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fa-solid fa-compass" style="color: var(--primary);" aria-hidden="true"></i> 3. Extra Context (Optional)
-              </h3>
-
-              <div class="grid-2" style="gap: 1.25rem; margin-bottom: 1.5rem;">
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="adv-weak-subjects">Difficult Subjects (Optional)</label>
-                  <input type="text" id="adv-weak-subjects" class="form-control" placeholder="e.g. Operating Systems, Linear Algebra" />
-                  <span class="form-hint">Subjects where you want extra help</span>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="adv-semester-records">Prior Semester GPAs (Optional)</label>
-                  <input type="text" id="adv-semester-records" class="form-control" placeholder="e.g. Sem 1: 7.40, Sem 2: 7.85" />
-                  <span class="form-hint">Past semester trend if you want to share it</span>
-                </div>
-              </div>
-
-              <div class="form-group" style="margin-bottom: 1.5rem;">
-                <label class="form-label" for="adv-notes">Notes or Upcoming Deadlines (Optional)</label>
-                <textarea id="adv-notes" class="form-control" rows="2" placeholder="e.g. Midterm exams start in 3 weeks; aiming to keep my scholarship."></textarea>
-              </div>
-
-              <!-- Action Buttons -->
-              <div class="form-action-row">
-                <button type="submit" id="adv-submit-btn" class="btn btn-primary" style="flex: 1;">
-                  <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Get My Study Advice
-                </button>
-                <button type="button" id="adv-reset-btn" class="btn btn-secondary" title="Reset all input fields">
-                  <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Reset
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <!-- Empty State Card -->
-          <div id="adv-empty-state" class="card text-center" style="padding: 2rem 1.5rem; margin-bottom: 2rem;">
-            <p style="font-size: 0.95rem; color: var(--text-secondary); max-width: 560px; margin: 0 auto;">
-              Fill in your CGPA, courses, or difficult subjects above and click <strong>Get My Study Advice</strong> to see your calculated course summary and personalized recommendations.
-            </p>
-          </div>
-
-          <!-- Loading State Container -->
-          <div id="adv-loading-state" class="card text-center ai-loading-card" aria-live="polite" style="display: none;">
-            <div class="ai-loading-spinner">
-              <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i>
-            </div>
-            <h3 class="ai-loading-title">
-              Preparing your study advice…
-            </h3>
-            <p class="ai-loading-desc">
-              Reviewing your courses, credit weights, and study hours with the backend AI service.
-            </p>
-          </div>
-
-          <!-- Error Alert Banner -->
-          <div id="adv-error-alert" class="card" role="alert" style="display: none; border-left: 4px solid var(--danger); background: var(--danger-light); padding: 1.25rem; margin-bottom: 2rem;">
-            <div style="display: flex; gap: 0.75rem; align-items: flex-start; justify-content: space-between; flex-wrap: wrap;">
-              <div style="display: flex; gap: 0.75rem; align-items: flex-start; flex: 1; min-width: 220px;">
-                <i class="fa-solid fa-triangle-exclamation" style="color: var(--danger); font-size: 1.25rem; margin-top: 0.15rem;" aria-hidden="true"></i>
-                <div style="flex: 1;">
-                  <h4 style="font-size: 1rem; font-weight: 700; color: var(--danger); margin-bottom: 0.25rem;" id="adv-error-title">
-                    Analysis Error
-                  </h4>
-                  <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;" id="adv-error-message">
-                    An error occurred.
-                  </p>
-                </div>
-              </div>
-              <button type="button" id="adv-retry-btn" class="btn btn-danger btn-sm">
-                <i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Try Again
-              </button>
-            </div>
-          </div>
-
-          <!-- Output Container -->
-          <div id="adv-output-container" class="ai-output-container" style="display: none;">
-            
-            <!-- 1. Calculated Factual Metrics Panel -->
-            <div class="card" style="margin-bottom: 1.5rem; border: 1px solid var(--border-color); background: var(--bg-card);">
-              <div class="card-header" style="flex-wrap: wrap; gap: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem;">
-                <div>
-                  <span class="badge badge-cyan" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                    <i class="fa-solid fa-calculator"></i> Calculated Results
-                  </span>
-                  <h3 class="card-title" style="margin-top: 0.35rem; font-size: 1.15rem;">
-                    Objective Academic Performance Breakdown
-                  </h3>
-                </div>
-                <div id="adv-completeness-badge" class="badge badge-neutral">
-                  Data: Comprehensive
-                </div>
-              </div>
-
-              <!-- Metrics Stats Grid -->
-              <div class="grid-4" style="gap: 1rem; margin-bottom: 1.25rem;">
-                <div class="stat-card stat-cyan">
-                  <div class="stat-icon"><i class="fa-solid fa-award"></i></div>
-                  <div class="stat-info">
-                    <span class="stat-label">Evaluated Course GPA</span>
-                    <span id="adv-metric-gpa" class="stat-value">--</span>
-                  </div>
-                </div>
-
-                <div class="stat-card stat-purple">
-                  <div class="stat-icon"><i class="fa-solid fa-coins"></i></div>
-                  <div class="stat-info">
-                    <span class="stat-label">Evaluated Credits</span>
-                    <span id="adv-metric-credits" class="stat-value">0</span>
-                  </div>
-                </div>
-
-                <div class="stat-card stat-success">
-                  <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
-                  <div class="stat-info">
-                    <span class="stat-label">Identified Strengths</span>
-                    <span id="adv-metric-strengths-count" class="stat-value">0</span>
-                  </div>
-                </div>
-
-                <div class="stat-card stat-warning">
-                  <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                  <div class="stat-info">
-                    <span class="stat-label">Improvement Areas</span>
-                    <span id="adv-metric-needs-count" class="stat-value">0</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Strengths & Improvement Tags -->
-              <div class="grid-2" style="gap: 1rem;">
-                <div style="background: var(--bg-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-                  <strong style="font-size: 0.85rem; color: var(--success); display: block; margin-bottom: 0.5rem;">
-                    <i class="fa-solid fa-arrow-trend-up"></i> Top Performing Courses:
-                  </strong>
-                  <div id="adv-strengths-tags" style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
-                    <span class="badge badge-success">None calculated</span>
-                  </div>
-                </div>
-
-                <div style="background: var(--bg-card-subtle); padding: 1rem; border-radius: var(--radius-md);">
-                  <strong style="font-size: 0.85rem; color: var(--warning); display: block; margin-bottom: 0.5rem;">
-                    <i class="fa-solid fa-arrow-trend-down" aria-hidden="true"></i> Courses Needing Focus:
-                  </strong>
-                  <div id="adv-needs-tags" style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
-                    <span class="badge badge-warning">None calculated</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Limitations Notice (if partial data supplied) -->
-              <div id="adv-limitations-box" style="display: none; margin-top: 1rem; padding: 0.75rem 1rem; background: var(--warning-light); border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--text-secondary);">
-                <i class="fa-solid fa-circle-info" style="color: var(--warning); margin-right: 0.35rem;"></i>
-                <span id="adv-limitations-text"></span>
-              </div>
-            </div>
-
-            <!-- 2. AI Generative Strategic Report Panel -->
-            <div class="card ai-result-panel" style="margin-bottom: 1.5rem;">
-              <div class="card-header" style="flex-wrap: wrap; gap: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem;">
-                <div>
-                  <span class="badge badge-success" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                    <i class="fa-solid fa-brain"></i> AI Strategic Assessment
-                  </span>
-                  <h3 class="card-title" style="margin-top: 0.35rem; font-size: 1.15rem;">
-                    Personalized Academic Advisory Report
-                  </h3>
-                </div>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                  <button type="button" id="adv-copy-btn" class="btn btn-secondary btn-sm">
-                    <i class="fa-solid fa-copy"></i> Copy Report
-                  </button>
-                  <button type="button" id="adv-pdf-btn" class="btn btn-primary btn-sm">
-                    <i class="fa-solid fa-file-pdf"></i> Export PDF
-                  </button>
-                </div>
-              </div>
-
-              <!-- Rendered Markdown Body (Contains 5 Sections) -->
-              <div id="adv-content-body" class="ai-content-body"></div>
-
-              <!-- Official University Evaluation Disclaimer -->
-              <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
-                <span style="font-size: 0.8rem; color: var(--text-muted);">
-                  <i class="fa-solid fa-building-columns"></i> <strong>Disclaimer:</strong> This diagnostic report is generated by GradePilot AI Copilot for self-directed study optimization and does not represent an official university grading assessment.
-                </span>
-                <span style="font-size: 0.75rem; color: var(--text-muted);">
-                  Powered by Google Gemini
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="section-cgpa-predictor" class="app-section">
-          <div class="section-header">
-            <div class="section-header-content">
-              <h2>AI CGPA Predictor</h2>
-              <p>Estimates the upcoming semester SGPA needed to reach your target CGPA and shows how different SGPA outcomes affect your cumulative score.</p>
-            </div>
-            <div class="section-header-actions">
-              <span class="badge badge-cyan" id="pred-header-status-badge">
-                <i class="fa-solid fa-calculator" aria-hidden="true"></i> Credit-Weighted Formula
-              </span>
-            </div>
-          </div>
-
-          <!-- Disclaimers / Academic Notice -->
-          <div class="grid-2" style="gap: 1rem; margin-bottom: 1.5rem;">
-            <div class="card" style="background: var(--primary-light); border-left: 4px solid var(--primary); padding: 1rem 1.25rem; margin-bottom: 0;">
-              <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--primary); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fa-solid fa-square-root-variable" aria-hidden="true"></i> How This Estimate Works
-              </h4>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
-                Required SGPA and scenario numbers are calculated directly in your browser using credit-weighted averages, not guessed by AI.
-              </p>
-            </div>
-
-            <div class="card" style="background: var(--warning-light); border-left: 4px solid var(--warning); padding: 1rem 1.25rem; margin-bottom: 0;">
-              <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--warning); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Estimate Limitations
-              </h4>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
-                Projections are estimates based on the credits and scale you enter. They are not guaranteed outcomes and may differ from university rounding or retake rules.
-              </p>
-            </div>
-          </div>
-
-          <!-- Input Controls Card -->
-          <div class="card" style="margin-bottom: 1.75rem;">
-            <div class="card-header" style="margin-bottom: 1rem;">
-              <h3 class="card-title" style="font-size: 1.05rem;">
-                <i class="fa-solid fa-sliders" style="color: var(--primary);" aria-hidden="true"></i> Enter Your Credits &amp; CGPA Goal
-              </h3>
-            </div>
-
-            <!-- Validation Error Alert Container -->
-            <div id="pred-error-alert" class="pct-error-alert" style="display: none; margin-bottom: 1.25rem;" role="alert"></div>
-
-            <form id="pred-form" onsubmit="event.preventDefault(); CgpaPredictor.calculate();">
-              <div class="grid-3" style="gap: 1.25rem; margin-bottom: 1.25rem;">
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="pred-max-scale">Grade-Point Scale <span class="req">*</span></label>
-                  <select id="pred-max-scale" class="form-control">
-                    <option value="10.0" selected>10.0 Scale (e.g., India / Technical)</option>
-                    <option value="4.0">4.0 Scale (e.g., US / International)</option>
-                    <option value="5.0">5.0 Scale</option>
-                    <option value="7.0">7.0 Scale</option>
-                  </select>
-                  <span class="form-hint">Your institution's maximum GPA (&gt; 0)</span>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="pred-current-cgpa">Current CGPA (0 – Max Scale) <span class="req">*</span></label>
-                  <input type="number" id="pred-current-cgpa" class="form-control" placeholder="e.g. 8.00" value="8.00" step="0.01" min="0" required />
-                  <span class="form-hint">Cumulative GPA earned so far</span>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="pred-completed-credits">Completed Credits (credits) <span class="req">*</span></label>
-                  <input type="number" id="pred-completed-credits" class="form-control" placeholder="e.g. 60" value="60" step="0.5" min="0" required />
-                  <span class="form-hint">Credits finished before this term (&ge; 0)</span>
-                </div>
-              </div>
-
-              <div class="grid-3" style="gap: 1.25rem; margin-bottom: 1.25rem;">
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="pred-target-cgpa">Target CGPA (0 – Max Scale) <span class="req">*</span></label>
-                  <input type="number" id="pred-target-cgpa" class="form-control" placeholder="e.g. 8.50" value="8.50" step="0.01" min="0" required />
-                  <span class="form-hint">Goal CGPA after this semester</span>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="pred-upcoming-credits">Upcoming Semester Credits (credits) <span class="req">*</span></label>
-                  <input type="number" id="pred-upcoming-credits" class="form-control" placeholder="e.g. 20" value="20" step="0.5" min="0.5" required />
-                  <span class="form-hint">Credits you are taking next term (&gt; 0)</span>
-                </div>
-
-                <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="pred-academic-notes">Notes for AI Report (Optional)</label>
-                  <input type="text" id="pred-academic-notes" class="form-control" placeholder="e.g. Need 8.5 for scholarship renewal" />
-                  <span class="form-hint">Optional context if you consult the AI Advisor</span>
-                </div>
-              </div>
-
-              <div class="form-action-row">
-                <button type="button" id="pred-calc-btn" class="btn btn-primary" style="flex: 1;">
-                  <i class="fa-solid fa-calculator" aria-hidden="true"></i> Calculate Required SGPA
-                </button>
-                <button type="button" id="pred-reset-btn" class="btn btn-secondary" title="Reset all fields to defaults">
-                  <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Reset
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <!-- Impossible Target Warning Banner Container -->
-          <div id="pred-impossible-banner" style="display: none; margin-bottom: 1.75rem;"></div>
-
-          <!-- Deterministic Calculation Results Card -->
-          <div id="pred-results-card" class="card" aria-live="polite" style="margin-bottom: 1.75rem; transition: opacity 0.2s ease;">
-            <div class="card-header" style="flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem;">
-              <div>
-                <span class="badge badge-primary" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                  <i class="fa-solid fa-circle-check"></i> Authoritative Result
-                </span>
-                <h3 class="card-title" style="margin-top: 0.35rem; font-size: 1.15rem;">
-                  Semester Target Requirement Breakdown
-                </h3>
-              </div>
-              <div id="pred-feasibility-badge" class="badge badge-success">
-                Achievable Target
-              </div>
-            </div>
-
-            <!-- Primary Metrics Stat Grid -->
-            <div class="grid-4" style="gap: 1rem; margin-bottom: 1.5rem;">
-              <div class="stat-card stat-cyan">
-                <div class="stat-icon"><i class="fa-solid fa-bullseye"></i></div>
-                <div class="stat-info">
-                  <span class="stat-label">Current CGPA</span>
-                  <span id="pred-disp-current" class="stat-value">8.00</span>
-                </div>
-              </div>
-
-              <div class="stat-card stat-purple">
-                <div class="stat-icon"><i class="fa-solid fa-flag-checkered"></i></div>
-                <div class="stat-info">
-                  <span class="stat-label">Target CGPA</span>
-                  <span id="pred-disp-target" class="stat-value">8.50</span>
-                </div>
-              </div>
-
-              <div class="stat-card stat-warning">
-                <div class="stat-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
-                <div class="stat-info">
-                  <span class="stat-label">Target CGPA Gain</span>
-                  <span id="pred-disp-delta" class="stat-value">+0.50</span>
-                </div>
-              </div>
-
-              <div class="stat-card stat-success">
-                <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
-                <div class="stat-info">
-                  <span class="stat-label">Total Credits Post-Term</span>
-                  <span id="pred-disp-total-credits" class="stat-value">80.0 Credits</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Required SGPA Big Hero Score Box -->
-            <div class="calc-results-box" style="margin-bottom: 1.5rem; background: var(--bg-card-subtle); border-radius: var(--radius-md); padding: 1.5rem; text-align: center;">
-              <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.075em; font-weight: 700; display: block; margin-bottom: 0.5rem;">
-                Mathematically Required Upcoming Semester SGPA
-              </span>
-              <div id="pred-required-sgpa-display" class="calc-score-display" style="font-size: 3.25rem; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem;">
-                10.00
-              </div>
-              <p style="font-size: 0.95rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
-                You must earn this exact credit-weighted semester grade-point average across your upcoming semester credits to elevate your cumulative record to the target.
-              </p>
-            </div>
-
-            <!-- Step-by-Step Mathematical Formula Explanation -->
-            <div id="pred-formula-explanation-box"></div>
-          </div>
-
-          <!-- Scenario Comparison Section -->
-          <div id="pred-scenarios-card" class="card" style="margin-bottom: 1.75rem;">
-            <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
-              <div>
-                <h3 class="card-title" style="font-size: 1.05rem;">
-                  <i class="fa-solid fa-table-columns" style="color: var(--primary);"></i> Hypothetical SGPA Scenario Comparison
-                </h3>
-                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
-                  Compare hypothetical semester SGPA outcomes (e.g. 7.0, 8.0, 9.0, 10.0) and inspect their resulting credit-weighted cumulative CGPA.
-                </p>
-              </div>
-              <div class="pred-scenario-controls">
-                <input type="number" id="pred-custom-scenario-input" class="form-control pred-scenario-input" aria-label="Custom hypothetical SGPA to test" placeholder="e.g. 8.75 SGPA" step="0.1" min="0" />
-                <button type="button" id="pred-add-scenario-btn" class="btn btn-primary btn-sm">
-                  <i class="fa-solid fa-plus" aria-hidden="true"></i> Test SGPA
-                </button>
-                <button type="button" id="pred-reset-scenarios-btn" class="btn btn-secondary btn-sm" title="Reset scenario brackets">
-                  <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Reset
-                </button>
-              </div>
-            </div>
-
-            <div class="table-responsive" style="margin-bottom: 1rem;">
-              <table class="data-table" id="pred-scenarios-table">
-                <thead>
-                  <tr>
-                    <th>Hypothetical SGPA</th>
-                    <th>Projected Cumulative CGPA</th>
-                    <th>&Delta; from Current CGPA</th>
-                    <th>&Delta; from Target CGPA</th>
-                    <th>Target Outcome</th>
-                  </tr>
-                </thead>
-                <tbody id="pred-scenarios-body">
-                  <!-- Rendered dynamically by CgpaPredictor.renderScenarios() -->
-                </tbody>
-              </table>
-            </div>
-
-            <div style="background: rgba(148, 163, 184, 0.08); border-radius: var(--radius-sm); padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
-              <i class="fa-solid fa-circle-info" style="color: var(--primary);"></i>
-              <span><strong>Note:</strong> All projected CGPA values are strictly hypothetical estimates based on the standard credit-weighted formula. Outcomes depend entirely on final earned grades and institutional rounding policies.</span>
-            </div>
-          </div>
-
-          <!-- AI Target Feasibility & Strategic Advisory Action Card -->
-          <div class="card" style="margin-bottom: 2rem; border: 1px solid var(--border-color);">
-            <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
-              <div>
-                <span class="badge badge-success" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                  <i class="fa-solid fa-brain"></i> AI Copilot Integration
-                </span>
-                <h3 class="card-title" style="margin-top: 0.35rem; font-size: 1.15rem;">
-                  Consult AI Advisor on Target Feasibility
-                </h3>
-                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
-                  Receive an evidence-based strategic explanation of your required SGPA, comparison of scenario trajectories, high-credit course priorities, and practical preparation strategies.
-                </p>
-              </div>
-            </div>
-
-            <button type="button" id="pred-consult-ai-btn" class="btn btn-primary btn-lg" style="width: 100%;">
-              <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Consult AI Advisor on Target Feasibility
-            </button>
-            <p id="pred-ai-empty-state" style="font-size: 0.84rem; color: var(--text-muted); text-align: center; margin: 0.75rem 0 0;">
-              Click above to get an AI summary of your required SGPA, scenario trade-offs, and study priorities.
-            </p>
-          </div>
-
-          <!-- AI Loading State Container -->
-          <div id="pred-ai-loading-state" class="card text-center ai-loading-card" aria-live="polite" style="display: none;">
-            <div class="ai-loading-spinner">
-              <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i>
-            </div>
-            <h3 class="ai-loading-title">
-              Generating Target Feasibility Report…
-            </h3>
-            <p class="ai-loading-desc">
-              Reviewing your required SGPA and scenario comparisons with the backend AI service.
-            </p>
-          </div>
-
-          <!-- AI Error Banner -->
-          <div id="pred-ai-error-alert" class="card" role="alert" style="display: none; border-left: 4px solid var(--danger); background: var(--danger-light); padding: 1.25rem; margin-bottom: 2rem;">
-            <div style="display: flex; gap: 0.75rem; align-items: flex-start; justify-content: space-between; flex-wrap: wrap;">
-              <div style="display: flex; gap: 0.75rem; align-items: flex-start; flex: 1; min-width: 220px;">
-                <i class="fa-solid fa-triangle-exclamation" style="color: var(--danger); font-size: 1.25rem; margin-top: 0.15rem;" aria-hidden="true"></i>
-                <div style="flex: 1;">
-                  <h4 style="font-size: 1rem; font-weight: 700; color: var(--danger); margin-bottom: 0.25rem;" id="pred-ai-error-title">
-                    AI Advisor Error
-                  </h4>
-                  <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;" id="pred-ai-error-message">
-                    An error occurred.
-                  </p>
-                </div>
-              </div>
-              <button type="button" id="pred-ai-retry-btn" class="btn btn-danger btn-sm">
-                <i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Try Again
-              </button>
-            </div>
-          </div>
-
-          <!-- AI Report Output Container -->
-          <div id="pred-ai-output-container" class="card ai-result-panel" style="display: none; margin-bottom: 2rem;">
-            <div class="card-header" style="flex-wrap: wrap; gap: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
-              <div>
-                <span class="badge badge-success" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                  <i class="fa-solid fa-brain"></i> Strategic Guidance
-                </span>
-                <h3 class="card-title" style="margin-top: 0.35rem; font-size: 1.15rem;">
-                  Target Feasibility & Execution Strategy Report
-                </h3>
-              </div>
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <button type="button" id="pred-copy-ai-btn" class="btn btn-secondary btn-sm">
-                  <i class="fa-solid fa-copy"></i> Copy Report
-                </button>
-                <button type="button" id="pred-export-pdf-btn" class="btn btn-primary btn-sm">
-                  <i class="fa-solid fa-file-pdf"></i> Export PDF
-                </button>
-              </div>
-            </div>
-
-            <!-- Markdown Render Body -->
-            <div id="pred-ai-content-body" class="ai-content-body"></div>
-
-            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
-              <span style="font-size: 0.8rem; color: var(--text-muted);">
-                <i class="fa-solid fa-shield-halved"></i> <strong>Disclaimer:</strong> Projected calculations and AI advice are hypothetical academic aids and not official grading records.
-              </span>
-              <span style="font-size: 0.75rem; color: var(--text-muted);">
-                Powered by Google Gemini
-              </span>
-            </div>
-          </div>
-        </section>
-
         <section id="section-study-planner" class="app-section">
           <div class="section-header">
             <div class="section-header-content">
@@ -2511,7 +1530,7 @@
                 <em>(Note: LocalStorage is standard, unencrypted client-side browser storage scoped to this origin.)</em>
               </p>
               <p style="margin-bottom: 0.75rem;">
-                <strong>AI Service Data Flow:</strong> When invoking AI features (Academic Advisor, CGPA Predictor, Study Planner, Chat Assistant), only the specific academic inputs required for that analysis (such as current/target CGPA, course names, or revision preferences) are transmitted to the Flask backend and official Google Gemini API.
+                <strong>AI Service Data Flow:</strong> When invoking AI features (Study Planner, Chat Assistant), only the specific academic inputs required for that analysis (such as current/target CGPA, course names, or revision preferences) are transmitted to the Flask backend and official Google Gemini API.
               </p>
               <p style="margin-bottom: 0;">
                 <strong>Institutional Boundary:</strong> GradePilot AI does not connect to, query, or store official university student registrar credentials, SIS passwords, or private institutional academic databases.
@@ -2536,7 +1555,7 @@
                 <span class="footer-logo-text">GradePilot <span class="brand-pill-badge">AI</span></span>
               </a>
               <p class="footer-bio-text">
-                The premier AI-powered academic performance platform. Calculate grades, predict CGPA trajectories, and generate high-yield study plans with Google Gemini intelligence.
+                The AI-powered academic performance platform. Calculate grades and CGPA, and generate high-yield study plans with Google Gemini intelligence.
               </p>
               <div style="display: flex; gap: 0.75rem; align-items: center;">
                 <a href="https://github.com/arunabh14307/GradePointer-AI" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-sm" style="border: 1px solid var(--border-subtle); border-radius: 10px;">
@@ -2551,8 +1570,6 @@
               <ul class="footer-links-list">
                 <li><a href="#cgpa-calculator" data-navigate="cgpa-calculator">CGPA / TGPA Calculator</a></li>
                 <li><a href="#grade-calculator" data-navigate="grade-calculator">Coursework Grade Calc</a></li>
-                <li><a href="#percentage-calculator" data-navigate="percentage-calculator">Percentage Suite</a></li>
-                <li><a href="#percentage-calculator" data-navigate="percentage-calculator">Marks &amp; Target Solver</a></li>
                 <li><a href="#dashboard" data-navigate="dashboard">Performance Dashboard</a></li>
               </ul>
             </div>
@@ -2561,8 +1578,6 @@
             <div>
               <div class="footer-col-title">AI Features</div>
               <ul class="footer-links-list">
-                <li><a href="#ai-advisor" data-navigate="ai-advisor">AI Academic Advisor</a></li>
-                <li><a href="#cgpa-predictor" data-navigate="cgpa-predictor">AI CGPA Forecaster</a></li>
                 <li><a href="#study-planner" data-navigate="study-planner">AI Study Plan Generator</a></li>
                 <li><a href="#ai-chat" data-navigate="ai-chat">Ask GradePilot</a></li>
                 <li><a href="#settings" data-navigate="settings">API Key & Backend Setup</a></li>
@@ -2610,9 +1625,6 @@
   <script src="js/dashboard.js?v=audit_v1"></script>
   <script src="js/grade-calculator.js?v=audit_v1"></script>
   <script src="js/cgpa-calculator.js?v=audit_v1"></script>
-  <script src="js/percentage-calculator.js?v=audit_v1"></script>
-  <script src="js/ai-advisor.js?v=audit_v1"></script>
-  <script src="js/cgpa-predictor.js?v=audit_v1"></script>
   <script src="js/study-planner.js?v=audit_v1"></script>
   <script src="js/ai-chat.js?v=audit_v1"></script>
   <script src="js/app.js?v=audit_v1"></script>

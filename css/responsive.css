@@ -171,16 +171,6 @@
     flex: 1;
     justify-content: center;
   }
-
-  .pct-subtabs-nav {
-    padding: 0 1rem;
-    gap: 0.75rem;
-  }
-
-  .pct-subtab-btn {
-    font-size: 0.85rem;
-    padding: 0.65rem 0.25rem;
-  }
 }
 
 /* --- Astra AI Responsive Enhancements --- */
@@ -273,11 +263,6 @@
   .chat-card {
     min-height: 420px;
     max-height: calc(100dvh - 180px);
-  }
-
-  .pct-subtabs-nav {
-    flex-wrap: wrap;
-    gap: 0.5rem;
   }
 
   .modal-dialog {

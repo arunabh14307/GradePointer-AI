@@ -10,9 +10,6 @@ const App = (() => {
     'dashboard',
     'grade-calculator',
     'cgpa-calculator',
-    'percentage-calculator',
-    'ai-advisor',
-    'cgpa-predictor',
     'study-planner',
     'ai-chat',
     'settings'
@@ -23,9 +20,6 @@ const App = (() => {
     'dashboard': 'Dashboard',
     'grade-calculator': 'Grade Calculator',
     'cgpa-calculator': 'CGPA Calculator',
-    'percentage-calculator': 'Percentage',
-    'ai-advisor': 'AI Advisor',
-    'cgpa-predictor': 'CGPA Predictor',
     'study-planner': 'Study Planner',
     'ai-chat': 'Ask GradePilot',
     'settings': 'Settings'
@@ -43,9 +37,6 @@ const App = (() => {
     Dashboard.init();
     GradeCalculator.init();
     CgpaCalculator.init();
-    PercentageCalculator.init();
-    AiAdvisor.init();
-    CgpaPredictor.init();
     StudyPlanner.init();
     AiChat.init();
 
@@ -195,6 +186,12 @@ const App = (() => {
 
     if (updateHash) {
       window.location.hash = validSection;
+    } else if (!SECTIONS.includes(sectionId) && window.location.hash) {
+      try {
+        history.replaceState(null, '', `#${validSection}`);
+      } catch (e) {
+        window.location.hash = validSection;
+      }
     }
 
     // Close mobile drawer on navigation
@@ -254,14 +251,9 @@ const App = (() => {
     const backendUrl = (Utils.getBackendUrl ? Utils.getBackendUrl() : settings.backendUrl) || 'https://grade-pointer-ai-backend.vercel.app';
     const pill = document.getElementById('backend-status-pill');
     const pillText = document.getElementById('backend-status-text');
-    const advBadge = document.getElementById('adv-status-badge');
     const chatBadge = document.getElementById('chat-backend-status-badge');
 
     const syncToolBadges = (badgeClass, label) => {
-      if (advBadge) {
-        advBadge.className = `badge ${badgeClass}`;
-        advBadge.textContent = label;
-      }
       if (chatBadge) {
         chatBadge.className = `badge ${badgeClass}`;
         chatBadge.innerHTML = `<span class="status-dot"></span> ${Utils.escapeHtml(label)}`;
