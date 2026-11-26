@@ -570,12 +570,14 @@ const CgpaPredictor = (() => {
     const backendUrl = (Utils.getBackendUrl ? Utils.getBackendUrl() : settings.backendUrl) || 'https://grade-pointer-ai-backend.vercel.app';
 
     const aiOutputContainer = document.getElementById('pred-ai-output-container');
+    const aiEmptyState = document.getElementById('pred-ai-empty-state');
     const loadingState = document.getElementById('pred-ai-loading-state');
     const errorAlert = document.getElementById('pred-ai-error-alert');
     const errorTitle = document.getElementById('pred-ai-error-title');
     const errorMessage = document.getElementById('pred-ai-error-message');
     const aiBtn = document.getElementById('pred-consult-ai-btn');
 
+    if (aiEmptyState) aiEmptyState.style.display = 'none';
     if (errorAlert) errorAlert.style.display = 'none';
     if (aiOutputContainer) aiOutputContainer.style.display = 'none';
     if (loadingState) loadingState.style.display = 'block';
@@ -761,16 +763,31 @@ const CgpaPredictor = (() => {
         e.preventDefault();
         populateDefaults();
         calculate();
+        const aiEmptyState = document.getElementById('pred-ai-empty-state');
+        const aiOutput = document.getElementById('pred-ai-output-container');
+        const aiError = document.getElementById('pred-ai-error-alert');
+        if (aiOutput) aiOutput.style.display = 'none';
+        if (aiError) aiError.style.display = 'none';
+        if (aiEmptyState) aiEmptyState.style.display = 'block';
         Utils.showToast('Predictor reset to default values.', 'info');
       });
     }
 
-    // Add Custom Scenario
+    // Add Custom Scenario (button + Enter key)
     const addScBtn = document.getElementById('pred-add-scenario-btn');
     if (addScBtn) {
       addScBtn.addEventListener('click', (e) => {
         e.preventDefault();
         addCustomScenario();
+      });
+    }
+    const customScInput = document.getElementById('pred-custom-scenario-input');
+    if (customScInput) {
+      customScInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addCustomScenario();
+        }
       });
     }
 
@@ -783,10 +800,17 @@ const CgpaPredictor = (() => {
       });
     }
 
-    // Consult AI Advisor Button
+    // Consult AI Advisor Button & Retry Button
     const aiBtn = document.getElementById('pred-consult-ai-btn');
     if (aiBtn) {
       aiBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        consultAiAdvisor();
+      });
+    }
+    const aiRetryBtn = document.getElementById('pred-ai-retry-btn');
+    if (aiRetryBtn) {
+      aiRetryBtn.addEventListener('click', (e) => {
         e.preventDefault();
         consultAiAdvisor();
       });

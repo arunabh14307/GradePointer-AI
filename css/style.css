@@ -1900,30 +1900,30 @@ select.form-control {
   gap: 0.4rem;
   margin-top: 0.5rem;
   padding: 0.35rem 0.75rem;
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  color: #FBBF24;
+  background: var(--warning-light);
+  border: 1px solid var(--warning);
+  color: var(--warning);
   font-size: 0.85rem;
   font-weight: 600;
   border-radius: var(--radius-full);
 }
 
 .pct-success-banner {
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.35);
+  background: var(--success-light);
+  border: 1px solid var(--success);
   border-radius: var(--radius-md);
   padding: 1rem 1.25rem;
   margin-top: 0.75rem;
   text-align: center;
-  color: #34D399;
+  color: var(--success);
   animation: fadeIn 0.3s ease;
 }
 
 .pct-success-banner h4 {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 800;
   margin-bottom: 0.25rem;
-  color: #10B981;
+  color: var(--success);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1931,8 +1931,26 @@ select.form-control {
 }
 
 .form-control.input-error {
-  border-color: #EF4444 !important;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px var(--danger-light) !important;
+}
+
+.pct-action-row {
+  margin-bottom: 0;
+  padding-top: 1.65rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pct-formula-math {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (max-width: 768px) {
+  .pct-action-row {
+    padding-top: 0.25rem;
+  }
 }
 
 /* ==========================================================================
@@ -4296,6 +4314,69 @@ a.astra-feature-card {
 a.astra-feature-card:focus-visible {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
+}
+
+.pred-scenario-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pred-scenario-input {
+  width: 145px;
+  min-height: 34px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.85rem;
+}
+
+.form-action-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.ai-loading-card {
+  padding: 2.75rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.ai-loading-spinner {
+  font-size: 2.25rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.ai-loading-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-main);
+}
+
+.ai-loading-desc {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+@media (max-width: 480px) {
+  .pred-scenario-controls {
+    width: 100%;
+  }
+  .pred-scenario-input {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+  .form-action-row .btn,
+  .pct-action-row .btn,
+  .pred-scenario-controls .btn {
+    min-height: 44px;
+  }
+  .pct-subtab-pane {
+    padding: 1rem !important;
+  }
 }
 
 /* --- Scroll Reveal Animations --- */

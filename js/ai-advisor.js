@@ -65,20 +65,20 @@ const AiAdvisor = (() => {
     tbody.innerHTML = subjectsList.map((s, idx) => `
       <tr data-index="${idx}">
         <td>
-          <input type="text" class="form-control adv-input-name" placeholder="e.g. Data Structures" value="${Utils.escapeHtml(s.name)}" data-field="name" />
+          <input type="text" class="form-control adv-input-name" aria-label="Course ${idx + 1} name" placeholder="e.g. Data Structures" value="${Utils.escapeHtml(s.name)}" data-field="name" />
         </td>
         <td>
-          <input type="number" class="form-control adv-input-gp" placeholder="e.g. 3.70" value="${s.gradePoints !== '' ? s.gradePoints : ''}" min="0" max="10" step="0.01" data-field="gradePoints" />
+          <input type="number" class="form-control adv-input-gp" aria-label="Course ${idx + 1} grade point" placeholder="e.g. 8.5 or 3.7" value="${s.gradePoints !== '' ? s.gradePoints : ''}" min="0" max="10" step="0.01" data-field="gradePoints" />
         </td>
         <td>
-          <input type="number" class="form-control adv-input-cr" placeholder="e.g. 4.0" value="${s.credits !== '' ? s.credits : ''}" min="0.5" max="30" step="0.5" data-field="credits" />
+          <input type="number" class="form-control adv-input-cr" aria-label="Course ${idx + 1} credits" placeholder="e.g. 4" value="${s.credits !== '' ? s.credits : ''}" min="0.5" max="30" step="0.5" data-field="credits" />
         </td>
         <td>
-          <input type="text" class="form-control adv-input-marks" placeholder="e.g. 88/100" value="${Utils.escapeHtml(s.marks || '')}" data-field="marks" />
+          <input type="text" class="form-control adv-input-marks" aria-label="Course ${idx + 1} marks (optional)" placeholder="e.g. 88/100" value="${Utils.escapeHtml(s.marks || '')}" data-field="marks" />
         </td>
         <td style="text-align: center;">
-          <button type="button" class="btn btn-ghost btn-sm adv-remove-row-btn" data-index="${idx}" title="Remove course" style="color: var(--danger);">
-            <i class="fa-solid fa-trash-can"></i>
+          <button type="button" class="btn btn-ghost btn-sm adv-remove-row-btn" data-index="${idx}" aria-label="Remove course ${idx + 1}" title="Remove course" style="color: var(--danger);">
+            <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
           </button>
         </td>
       </tr>
@@ -194,9 +194,11 @@ const AiAdvisor = (() => {
     populateDefaults();
 
     const outputContainer = document.getElementById('adv-output-container');
+    const emptyState = document.getElementById('adv-empty-state');
     const errorAlert = document.getElementById('adv-error-alert');
     const loadingState = document.getElementById('adv-loading-state');
     if (outputContainer) outputContainer.style.display = 'none';
+    if (emptyState) emptyState.style.display = 'block';
     if (errorAlert) errorAlert.style.display = 'none';
     if (loadingState) loadingState.style.display = 'none';
 
@@ -310,6 +312,7 @@ const AiAdvisor = (() => {
     const { payload, hasAnyData } = collectStudentData();
 
     const outputContainer = document.getElementById('adv-output-container');
+    const emptyState = document.getElementById('adv-empty-state');
     const loadingState = document.getElementById('adv-loading-state');
     const errorAlert = document.getElementById('adv-error-alert');
     const errorTitle = document.getElementById('adv-error-title');
@@ -318,11 +321,34 @@ const AiAdvisor = (() => {
 
     if (errorAlert) errorAlert.style.display = 'none';
 
+    // Range validation before network call (preserves entered values)
+    if (payload.currentCgpa !== null && (payload.currentCgpa < 0 || payload.currentCgpa > 10)) {
+      if (errorAlert && errorTitle && errorMessage) {
+        errorTitle.textContent = 'Invalid Current CGPA';
+        errorMessage.textContent = 'Current CGPA must be between 0 and 10.';
+        errorAlert.style.display = 'block';
+        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      Utils.showToast('Current CGPA must be between 0 and 10.', 'warning');
+      return;
+    }
+
+    if (payload.weeklyStudyHours < 0.5 || payload.weeklyStudyHours > 168) {
+      if (errorAlert && errorTitle && errorMessage) {
+        errorTitle.textContent = 'Invalid Weekly Study Hours';
+        errorMessage.textContent = 'Weekly study hours must be between 0.5 and 168.';
+        errorAlert.style.display = 'block';
+        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      Utils.showToast('Weekly study hours must be between 0.5 and 168.', 'warning');
+      return;
+    }
+
     // Validation: Require at least some student data
     if (!hasAnyData) {
       if (errorAlert && errorTitle && errorMessage) {
         errorTitle.textContent = 'Insufficient Academic Data';
-        errorMessage.textContent = 'Please supply at least your Current CGPA, an academic goal, or one subject with grades/credits so GradePilot AI can analyze your performance.';
+        errorMessage.textContent = 'Please enter at least your Current CGPA, a target goal, or one course with grades/credits.';
         errorAlert.style.display = 'block';
         errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
@@ -331,11 +357,12 @@ const AiAdvisor = (() => {
     }
 
     // Enter loading state
+    if (emptyState) emptyState.style.display = 'none';
     if (loadingState) loadingState.style.display = 'block';
     if (outputContainer) outputContainer.style.display = 'none';
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing Performance...';
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Preparing Advice...';
     }
 
     const settings = Storage.getSettings();
@@ -371,7 +398,7 @@ const AiAdvisor = (() => {
         errorTitle.textContent = 'AI Advisor Service Unavailable';
         errorMessage.innerHTML = `
           <strong>${Utils.escapeHtml(err.message || 'Connection failure')}</strong><br />
-          Ensure the Python Flask backend is running on <code>${Utils.escapeHtml(backendUrl)}</code> and that your Gemini API credentials are configured in <code>backend/.env</code>.
+          Check that the backend is reachable at <code>${Utils.escapeHtml(backendUrl)}</code> and try again.
         `;
         errorAlert.style.display = 'block';
         errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -381,7 +408,7 @@ const AiAdvisor = (() => {
       if (loadingState) loadingState.style.display = 'none';
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Analyze My Performance';
+        submitBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Get My Study Advice';
       }
     }
   };
@@ -559,6 +586,9 @@ const AiAdvisor = (() => {
 
     const resetBtn = document.getElementById('adv-reset-btn');
     if (resetBtn) resetBtn.addEventListener('click', resetForm);
+
+    const retryBtn = document.getElementById('adv-retry-btn');
+    if (retryBtn) retryBtn.addEventListener('click', () => handleGenerateAdvice());
 
     const copyBtn = document.getElementById('adv-copy-btn');
     if (copyBtn) copyBtn.addEventListener('click', copyAdvice);
