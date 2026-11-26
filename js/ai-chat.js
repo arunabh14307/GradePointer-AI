@@ -24,9 +24,10 @@ const AiChat = (() => {
 
   // Voice recognition state (Web Speech API)
   const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition || null;
-  const VOICE_MAX_DURATION_MS = 5000;
+  const NO_SPEECH_TIMEOUT_MS = 5000;
   let recognition = null;
   let isListening = false;
+  let hasSpeechStarted = false;
   let voiceBaseText = '';
   let voiceAccumulatedFinal = '';
   let voiceCancelled = false;
@@ -649,6 +650,18 @@ const AiChat = (() => {
   };
 
   /**
+   * Detach handlers from a recognition instance to prevent stale callbacks
+   */
+  const detachRecognitionHandlers = (rec) => {
+    if (!rec) return;
+    rec.onstart = null;
+    rec.onspeechstart = null;
+    rec.onresult = null;
+    rec.onerror = null;
+    rec.onend = null;
+  };
+
+  /**
    * Stop an active recognition session immediately
    */
   const stopVoiceInput = (reason = 'manual') => {
@@ -657,12 +670,16 @@ const AiChat = (() => {
     isListening = false;
     updateMicButtonState(false);
 
-    if (recognition) {
+    const activeRec = recognition;
+    recognition = null;
+
+    if (activeRec) {
+      detachRecognitionHandlers(activeRec);
       try {
         if (reason === 'cancel') {
-          recognition.abort();
+          activeRec.abort();
         } else {
-          recognition.stop();
+          activeRec.stop();
         }
       } catch (e) {
         // Ignore if recognition already ended
@@ -678,16 +695,26 @@ const AiChat = (() => {
         inputField.style.height = `${Math.min(inputField.scrollHeight, 120)}px`;
       }
       hideVoiceStatus();
-    } else if (reason === 'timeout') {
-      const inputField = document.getElementById('chat-input-field');
-      if (inputField && inputField.value.trim()) {
-        hideVoiceStatus();
-        inputField.focus();
-      } else {
-        showVoiceStatus('No speech detected. Tap Speak and try again.', true, true);
-      }
+    } else if (reason === 'no-speech-timeout') {
+      showVoiceStatus('No speech detected. Tap Speak and try again.', true, true);
     } else {
       hideVoiceStatus();
+      const inputField = document.getElementById('chat-input-field');
+      if (inputField && inputField.value.trim()) {
+        inputField.focus();
+      }
+    }
+  };
+
+  /**
+   * Mark speech as started and cancel the 5-second no-speech timer
+   */
+  const markSpeechStarted = () => {
+    if (hasSpeechStarted) return;
+    hasSpeechStarted = true;
+    clearVoiceTimers();
+    if (isListening) {
+      showVoiceStatus('Listening… Tap Stop when finished', false, true);
     }
   };
 
@@ -700,7 +727,7 @@ const AiChat = (() => {
       return;
     }
 
-    // If already listening, manual click stops recognition immediately
+    // If already listening, manual click stops recognition immediately and keeps recognized text
     if (isListening) {
       voiceCancelled = false;
       stopVoiceInput('manual');
@@ -710,11 +737,8 @@ const AiChat = (() => {
     // Prevent overlapping sessions or timers
     clearVoiceTimers();
     if (recognition) {
+      detachRecognitionHandlers(recognition);
       try {
-        recognition.onstart = null;
-        recognition.onresult = null;
-        recognition.onerror = null;
-        recognition.onend = null;
         recognition.abort();
       } catch (e) {
         // Ignore cleanup errors
@@ -726,18 +750,22 @@ const AiChat = (() => {
     const langSelect = document.getElementById('chat-voice-lang');
     voiceBaseText = inputField ? inputField.value.trim() : '';
     voiceAccumulatedFinal = '';
+    hasSpeechStarted = false;
     voiceCancelled = false;
     voiceManualStop = false;
 
     const createAndStartSession = () => {
+      let sessionRec = null;
       try {
-        recognition = new SpeechRecognitionAPI();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.maxAlternatives = 1;
-        recognition.lang = (langSelect && langSelect.value) ? langSelect.value : 'en-IN';
+        sessionRec = new SpeechRecognitionAPI();
+        sessionRec.continuous = true;
+        sessionRec.interimResults = true;
+        sessionRec.maxAlternatives = 1;
+        sessionRec.lang = (langSelect && langSelect.value) ? langSelect.value : 'en-IN';
+        recognition = sessionRec;
       } catch (err) {
         clearVoiceTimers();
+        recognition = null;
         isListening = false;
         updateMicButtonState(false);
         showVoiceStatus("Voice input couldn't be started in this browser.", true, true);
@@ -745,20 +773,21 @@ const AiChat = (() => {
       }
 
       let hadFatalError = false;
-      let shouldRestartForWindow = false;
+      let shouldRestartForNoSpeechWait = false;
       let sessionFinal = '';
 
-      recognition.onstart = () => {
+      sessionRec.onstart = () => {
+        if (recognition !== sessionRec) return;
         isListening = true;
         updateMicButtonState(true);
 
-        // Start the 5-second window only once when initial session begins
-        if (voiceTimeoutId === null) {
-          voiceDeadlineMs = Date.now() + VOICE_MAX_DURATION_MS;
+        // Start the 5-second no-speech timer only while waiting for speech to begin
+        if (!hasSpeechStarted && voiceTimeoutId === null) {
+          voiceDeadlineMs = Date.now() + NO_SPEECH_TIMEOUT_MS;
           showVoiceStatus('Listening… (5s)', false, true);
 
           voiceCountdownId = setInterval(() => {
-            if (!isListening) {
+            if (!isListening || hasSpeechStarted) {
               clearVoiceTimers();
               return;
             }
@@ -767,15 +796,20 @@ const AiChat = (() => {
           }, 250);
 
           voiceTimeoutId = setTimeout(() => {
-            if (isListening) {
-              stopVoiceInput('timeout');
+            if (isListening && !hasSpeechStarted) {
+              stopVoiceInput('no-speech-timeout');
             }
-          }, VOICE_MAX_DURATION_MS);
+          }, NO_SPEECH_TIMEOUT_MS);
         }
       };
 
-      recognition.onresult = (event) => {
-        if (voiceCancelled || !inputField) return;
+      sessionRec.onspeechstart = () => {
+        if (recognition !== sessionRec || voiceCancelled || voiceManualStop) return;
+        markSpeechStarted();
+      };
+
+      sessionRec.onresult = (event) => {
+        if (recognition !== sessionRec || voiceCancelled || !inputField) return;
         let interimTranscript = '';
         sessionFinal = '';
 
@@ -789,6 +823,10 @@ const AiChat = (() => {
         }
 
         const fullSpoken = `${voiceAccumulatedFinal} ${sessionFinal} ${interimTranscript}`.replace(/\s+/g, ' ').trim();
+        if (fullSpoken) {
+          markSpeechStarted();
+        }
+
         const combined = voiceBaseText
           ? (fullSpoken ? `${voiceBaseText} ${fullSpoken}` : voiceBaseText)
           : fullSpoken;
@@ -799,21 +837,24 @@ const AiChat = (() => {
         inputField.style.height = `${Math.min(inputField.scrollHeight, 120)}px`;
       };
 
-      recognition.onerror = (event) => {
+      sessionRec.onerror = (event) => {
+        if (recognition !== sessionRec) return;
         const errCode = event && event.error ? event.error : 'unknown';
 
         if (voiceCancelled || voiceManualStop) {
           return;
         }
 
-        // If browser ended early on silence while 5s window still has time left, restart seamlessly
-        if (errCode === 'no-speech' && isListening && (voiceDeadlineMs - Date.now()) > 600) {
-          shouldRestartForWindow = true;
+        // If browser ended early on no-speech before the 5s wait expired and user hasn't spoken yet, keep waiting
+        if (errCode === 'no-speech' && !hasSpeechStarted && isListening && (voiceDeadlineMs - Date.now()) > 600) {
+          shouldRestartForNoSpeechWait = true;
           return;
         }
 
         hadFatalError = true;
         clearVoiceTimers();
+        detachRecognitionHandlers(sessionRec);
+        recognition = null;
         isListening = false;
         updateMicButtonState(false);
 
@@ -834,26 +875,33 @@ const AiChat = (() => {
         Utils.showToast(message, 'warning');
       };
 
-      recognition.onend = () => {
+      sessionRec.onend = () => {
+        if (recognition !== sessionRec) return;
+
         if (sessionFinal) {
           voiceAccumulatedFinal = `${voiceAccumulatedFinal} ${sessionFinal}`.trim();
         }
 
         if (voiceCancelled || voiceManualStop) {
           clearVoiceTimers();
+          detachRecognitionHandlers(sessionRec);
+          recognition = null;
           isListening = false;
           updateMicButtonState(false);
           return;
         }
 
-        // Keep listening for the full 5s window if browser stopped early without fatal error
-        if (!hadFatalError && (shouldRestartForWindow || (isListening && (voiceDeadlineMs - Date.now()) > 600))) {
-          shouldRestartForWindow = false;
+        // Only restart automatically if still waiting for initial speech within the 5s no-speech window
+        if (!hadFatalError && !hasSpeechStarted && (shouldRestartForNoSpeechWait || (isListening && (voiceDeadlineMs - Date.now()) > 600))) {
+          shouldRestartForNoSpeechWait = false;
+          detachRecognitionHandlers(sessionRec);
           createAndStartSession();
           return;
         }
 
         clearVoiceTimers();
+        detachRecognitionHandlers(sessionRec);
+        recognition = null;
         isListening = false;
         updateMicButtonState(false);
 
@@ -868,9 +916,11 @@ const AiChat = (() => {
       };
 
       try {
-        recognition.start();
+        sessionRec.start();
       } catch (err) {
         clearVoiceTimers();
+        detachRecognitionHandlers(sessionRec);
+        recognition = null;
         isListening = false;
         updateMicButtonState(false);
         showVoiceStatus('Unable to start microphone listening. Please try again.', true, true);
